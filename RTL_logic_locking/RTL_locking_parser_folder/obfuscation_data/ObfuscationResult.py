@@ -32,6 +32,10 @@ class ObfuscationResult:
         self.num_branches = 0
         self.num_ops = 0
         self.num_reset = 0
+        self.num_transitions_bits=0
+        self.num_transitions=0
+        self.dummy_ops=0
+        self.dummy_ops_bits=0
         self.list_files = []
 
     def write_analysis(self, cfg):
@@ -53,9 +57,10 @@ class ObfuscationResult:
         print("------------------------------------------------------------------------------------")
 
     def write_report(self, cfg):
-        const_bits = self.top_output.key_bits - self.num_ops - self.num_branches
+        const_bits = self.top_output.key_bits - self.num_ops - self.num_branches-self.num_transitions_bits-self.dummy_ops
         spaces = max(len(str(self.num_consts)), len(str(self.num_branches)), len(str(self.num_ops)))
         spaces_bits = max(len(str(const_bits)), len(str(self.num_branches)), len(str(self.num_ops)))
+        '''
         print("------------------------------------------------------------------------------------")
         print("| Original module                    = \"" + self.top_output.module_name + "\"")
         print("| Obfuscated module                  = \"" + self.top_output.name + "\"")
@@ -63,6 +68,8 @@ class ObfuscationResult:
         print("| Number of obfuscated constants     = " + ' ' * (spaces - len(str(self.num_consts))) + str(self.num_consts) + " CONSTANTS  / " + ' ' * (spaces_bits - len(str(const_bits))) + str(const_bits) + " BITS")
         print("| Number of obfuscated branches      = " + ' ' * (spaces - len(str(self.num_branches))) + str(self.num_branches) + " BRANCHES   / " + ' ' * (spaces_bits - len(str(self.num_branches))) + str(self.num_branches) + " BITS")
         print("| Number of obfuscated operations    = " + ' ' * (spaces - len(str(self.num_ops))) + str(self.num_ops) + " OPERATIONS / " + ' ' * (spaces_bits - len(str(self.num_ops))) + str(self.num_ops) + " BITS")
+        print("| Number of dummy transition     = " + ' ' * (spaces - len(str(self.num_transitions))) + str(self.num_transitions) + " TRANSITIONS / " + ' ' * (spaces_bits - len(str(self.num_transitions))) + str(self.num_transitions_bits) + " BITS")
+        print("| Number of dummy operations     = " + ' ' * (spaces - len(str(self.dummy_ops))) + str(self.dummy_ops) + " OPERATIONS / " + ' ' * (spaces_bits - len(str(self.dummy_ops))) + str(self.dummy_ops) + " BITS")
         # print ("| Number of module key bits          = " + str(res.top_output.key_bits))
         # print ("| Number of internal key bits        = " + str(res.top_output.initial_working_key + res.top_output.key_bits))
         #print("------------------------------------------------------------------------------------")
@@ -70,5 +77,6 @@ class ObfuscationResult:
 
         print("| Current number of used key bits    = " + str(len(cfg.working_key)) + " BITS")
         print("------------------------------------------------------------------------------------")
+        '''
         self.top_output.key_bits = self.top_output.initial_working_key + self.top_output.key_bits
 

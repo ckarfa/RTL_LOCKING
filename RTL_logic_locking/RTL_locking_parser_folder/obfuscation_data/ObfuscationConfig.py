@@ -23,6 +23,9 @@ class ObfuscationConfig:
             self.obfuscate_consts = int(options.obfuscate_const)
         self.obfuscate_branch = options.obfuscate_branch
         self.obfuscate_ops = options.obfuscate_ops
+        self.spurious_ops=options.spurious_ops
+        self.dummy_states=options.dummy_states
+        self.spurious_trans=options.spurious_trans
         if options.obfuscate_all:
             self.obfuscate_consts = 0
             self.obfuscate_branch = True

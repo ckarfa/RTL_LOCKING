@@ -78,7 +78,7 @@ def get_const_size(item):
 def binaryToDecimal(n):
     return int(n,2)
 
-def apply(item, cfg, res, sig_size,list_working_key,user_key):
+def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant):
     print("in const apply")
     print(item)
     #print(key_value)
@@ -158,7 +158,7 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key):
         #print("end")
         return item
 
-    name = "Const_" + str(res.num_consts)
+    name = "Const_" + str(res.num_consts+total_constant)
     #print(name)
     sig = vast.Identifier(name)
     if size > 1:

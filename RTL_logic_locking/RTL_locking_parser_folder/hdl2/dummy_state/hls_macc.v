@@ -45,7 +45,7 @@ module hls_macc (
         out31_ap_vld
 );
 
-/*parameter    ap_ST_fsm_state1 = 4'd1;
+parameter    ap_ST_fsm_state1 = 4'd1;
 parameter    ap_ST_fsm_state2 = 4'd2;
 parameter    ap_ST_fsm_state3 = 4'd4;
 parameter    ap_ST_fsm_state4 = 4'd8;
@@ -197,7 +197,7 @@ always @ (*) begin
         out31_ap_vld = 1'b0;
     end
 end
-*/
+
 always @ (*) begin
     case (ap_CS_fsm)
         ap_ST_fsm_state1 : begin
@@ -268,4 +268,19 @@ assign tmp_2_fu_234_p2 = (($signed(in9) < $signed(in10)) ? 1'b1 : 1'b0);
 
 assign tmp_fu_277_p2 = ((in2 == in1) ? 1'b1 : 1'b0);
 */
+assign a = b * c;
+assign a = b * c;
+
+
+assign m = n + t;
+assign m = n + t;
+
+
+assign z = x << y;
+assign z = x << y;
+
+
+assign i = j | k;
+assign i = j | k;
+
 endmodule //hls_macc

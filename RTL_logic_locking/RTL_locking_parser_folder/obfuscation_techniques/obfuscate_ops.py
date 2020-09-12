@@ -12,6 +12,62 @@
 # limitations under the License.
 # -------------------------------------------------------------------------------
 import pyverilog.vparser.ast as vast
+import random
+
+def relational_alternative(item,left,right):
+    alter_item=item
+    while type(item) == type(alter_item):
+        type_alter=random.randint(0,4)
+        if type_alter==0:
+            alter_item=vast.GreaterThan(left,right)
+        elif type_alter==1:
+            alter_item=vast.LessThan(left,right)
+        elif type_alter==2:
+            alter_item=vast.Eq(left,right)
+        elif type_alter==3:
+            alter_item=vast.Eql(left,right)
+        elif type_alter==4:
+            alter_item=vast.NotEq(left,right)
+    return alter_item
+
+
+def bitwise_alter(item,left,right):
+    alter_item=item
+    while type(item) == type(alter_item):
+        type_alter=random.randint(0,4)
+        if type_alter==0:
+            alter_item=vast.Or(left,right)
+        elif type_alter==1:
+            alter_item=vast.And(left,right)
+        elif type_alter==2:
+            alter_item=vast.Xor(left,right)
+        elif type_alter==3:
+            alter_item=vast.Sll(left,right)
+        elif type_alter==4:
+            alter_item=vast.Srl(left,right)
+    return alter_item
+
+
+def arithmetic_alter(item,left,right):
+    #type_alter=random.randint(0,4)
+    alter_item=item
+    while type(item) == type(alter_item):
+        type_alter=random.randint(0,4)
+        if type_alter==0:
+            alter_item=vast.Plus(left,right)
+        elif type_alter==1:
+            alter_item=vast.Minus(left,right)
+        elif type_alter==2:
+            alter_item=vast.Times(left,right)
+        elif type_alter==3:
+            alter_item=vast.Sll(left,right)
+        elif type_alter==4:
+            alter_item=vast.Srl(left,right)
+    return alter_item
+
+        
+
+
 
 
 def apply(item, cfg, res,apply_operation_obf,list_working_key,user_key):
@@ -24,32 +80,35 @@ def apply(item, cfg, res,apply_operation_obf,list_working_key,user_key):
             return item
         pos = (len(cfg.working_key)) % len(cfg.input_key)
         key = cfg.input_key[pos]
-        if type(item) is vast.Plus:
-            alternative = vast.Minus(item.left, item.right)
-        elif type(item) is vast.Minus:
-            alternative = vast.Plus(item.left, item.right)
-        elif type(item) is vast.Or:
-            alternative = vast.And(item.left, item.right)
-        elif type(item) is vast.And:
-            alternative = vast.Or(item.left, item.right)
-        elif type(item) is vast.Times:
-            alternative = vast.Plus(item.left, item.right)
+        if type(item) is vast.Plus or type(item) is vast.Minus or type(item) is vast.Times:
+            #alternative = vast.Minus(item.left, item.right)
+            alternative= arithmetic_alter(item,item.left,item.right)
+        #elif type(item) is vast.Minus:
+            #alternative = vast.Plus(item.left, item.right)
+        elif type(item) is vast.Or or type(item) is vast.And or type(item) is vast.Xor:
+            #alternative=vast.And(item.left,item.right)
+            alternative = bitwise_alter(item,item.left, item.right)
+        #elif type(item) is vast.And:
+            #alternative = vast.Or(item.left, item.right)
+        #elif type(item) is vast.Times:
+            #alternative = vast.Plus(item.left, item.right)
         elif type(item) is vast.Sll:
             alternative = vast.Srl(item.left, item.right)
-        elif type(item) is vast.Xor:
-            alternative = vast.Or(item.left, item.right)
-        elif type(item) is vast.GreaterThan:
-            alternative = vast.GreaterThan(item.left , item.right)
-        elif type(item) is vast.Eq:
-            alternative = vast.GreaterThan(item.left , item.right)
-        elif type(item) is vast.LessThan:
-            alternative = vast.GreaterThan(item.left , item.right)
-        elif type(item) is vast.Eql:
-            alternative = vast.GreaterThan(item.left,item.right)
+        #elif type(item) is vast.Xor:
+            #alternative = vast.Or(item.left, item.right)
+        elif type(item) is vast.GreaterThan or type(item) is vast.Eq or type(item) is vast.NotEq or type(item) is vast.LessThan or type(item) is vast.Eql:
+            alternative = relational_alternative(item,item.left , item.right)
+            #alternative=vast.LessThan(item.left,item.right)
+        #elif type(item) is vast.Eq:
+            #alternative = vast.GreaterThan(item.left , item.right)
+        #elif type(item) is vast.LessThan:
+            #alternative = vast.GreaterThan(item.left , item.right)
+        #elif type(item) is vast.Eql:
+            #alternative = vast.GreaterThan(item.left,item.right)
         elif type(item) is vast.Srl:
             alternative = vast.Sll(item.left,item.right)
-        elif type(item) is vast.NotEq:
-            alternative = vast.Eq(item.left,item.right)
+        #elif type(item) is vast.NotEq:
+            #alternative = vast.Eq(item.left,item.right)
 
 
 

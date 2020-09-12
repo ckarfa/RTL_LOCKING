@@ -119,9 +119,12 @@ wire   [31:0] t16_2_fu_298_p3;
 reg   [3:0] ap_NS_fsm;
 
 // power-on initialization
+
+
 initial begin
 #0 ap_CS_fsm = 4'd1;
 end
+
 
 always @ (posedge ap_clk) begin
     if (ap_rst == 1'b1) begin
@@ -141,7 +144,7 @@ always @ (posedge ap_clk) begin
     if ((1'b1 == ap_CS_fsm_state2)) begin
         t23_reg_333 <= t23_fu_229_p2;
         t5_reg_328 <= t5_fu_217_p2;
-    end
+    end 
 end
 
 always @ (posedge ap_clk) begin
@@ -149,6 +152,7 @@ always @ (posedge ap_clk) begin
         t26_2_reg_338 <= t26_2_fu_262_p3;
     end
 end
+
 
 always @ (*) begin
     if ((1'b1 == ap_CS_fsm_state4)) begin
@@ -267,5 +271,6 @@ assign tmp3_fu_251_p2 = (in19 + in20);
 assign tmp_2_fu_234_p2 = (($signed(in9) < $signed(in10)) ? 1'b1 : 1'b0);
 
 assign tmp_fu_277_p2 = ((in2 == in1) ? 1'b1 : 1'b0);
+
 
 endmodule //hls_macc
