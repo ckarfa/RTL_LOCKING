@@ -29,6 +29,7 @@ total_dummy_states=0
 total_spurious_operations=0
 total_dummy_tansitions=0
 index_global=100
+total_mulchain=0
 def resolve(input_string):
 	string1=""
 	for i in input_string:
@@ -502,6 +503,7 @@ def find_input_reg(input_list,input_list_length):
 
 def create_mul_chain_operation(left,level,res,input_list,all_reg,input_list_length):
     global index_global
+    print("create multichain operation")
     width1=vast.IntConst(str(31))
     width2=vast.IntConst(str(0))
     width=vast.Width(width1,width2)
@@ -509,32 +511,114 @@ def create_mul_chain_operation(left,level,res,input_list,all_reg,input_list_leng
     left=vast.Identifier(left)
     lside=vast.Lvalue(left)
 
-    if level==0:
-        #print("hello")
-        right1_left=find_input_reg(input_list,input_list_length)
-        right1=vast.Lvalue(right1_left)
-        right2=find_input_reg(input_list,input_list_length)
-        right2=vast.Rvalue(right2)
-        operation=vast.Times(right1,right2)
-        operation=vast.Rvalue(operation)
-        item11=(vast.Assign(lside,operation),)
-        res.top_output.items+=item11
-        return 
-    
+   
+    index_global=index_global+1
+    right1="temp"+str(index_global)
+    res.top_output.definitions += (vast.Wire(right1, width,),)      
+    right1_left_str=right1
+    right1_left=vast.Identifier(right1)
+    right1=vast.Lvalue(right1_left)
+
+    index_global=index_global+1
+    right2="temp"+str(index_global)#find_input_reg(input_list,input_list_length)
+    res.top_output.definitions += (vast.Wire(right2, width,),)
+    right2=vast.Identifier(right2)
+    right_left=vast.Lvalue(right2)
+    right2=vast.Rvalue(right2)
+    operation=vast.Times(right1,right2)
+    operation=vast.Rvalue(operation)
+    item11=(vast.Assign(lside,operation),)
+    res.top_output.items+=item11
+
+    input_item1=find_input_reg(input_list,input_list_length)
+    input_item2=find_input_reg(input_list,input_list_length)
+    while input_item1.name==input_item2.name:
+        input_item1=find_input_reg(input_list,input_list_length)
+        input_item2=find_input_reg(input_list,input_list_length)
+
+    operation1=vast.Plus(input_item1,input_item2)
+    input_item1=find_input_reg(input_list,input_list_length)
+    input_item2=find_input_reg(input_list,input_list_length)
+    while input_item1.name==input_item2.name:
+        input_item1=find_input_reg(input_list,input_list_length)
+        input_item2=find_input_reg(input_list,input_list_length)
+
+    operation2=vast.Plus(input_item1,input_item2)
+    random_no=random.randint(0,1)
+    index=res.top_output.initial_working_key + res.top_output.key_bits
+    res.top_output.key_bits=res.top_output.key_bits+1
+    if random_no==0:
+        wk=vast.Identifier("working_key")
+        index=vast.IntConst(str(index))
+        point=vast.Pointer(wk,index)
+        eq=vast.Eq(point,vast.IntConst("1'b1"))
+        operation1_final=vast.Lvalue(operation1)
+        operation2_final=vast.Rvalue(operation2)
+        condition=vast.Cond(eq,operation1_final,operation2_final)
+        condition=vast.Rvalue(condition)
+        item13=(vast.Assign(right_left,condition),) 
+        res.top_output.items+=item13
+
     else:
-        #print(input_list)
-        right1="temp"+str(index_global)
-        index_global=index_global+1
-        right1_left_str=right1
-        right1_left=vast.Identifier(right1)
-        right1=vast.Lvalue(right1_left)
-        right2=find_input_reg(input_list,input_list_length)
-        right2=vast.Rvalue(right2)
-        operation=vast.Times(right1,right2)
-        operation=vast.Rvalue(operation)
-        item11=(vast.Assign(lside,operation),)
-        res.top_output.items+=item11
-        create_mul_chain_operation(right1_left_str,level-1,res,input_list,all_reg,input_list_length)
+        wk=vast.Identifier("working_key")
+        index=vast.IntConst(str(index))
+        point=vast.Pointer(wk,index)
+        eq=vast.Eq(point,vast.IntConst("1'b1"))
+        operation1_final=vast.Lvalue(operation1)
+        operation2_final=vast.Rvalue(operation2)
+        condition=vast.Cond(eq,operation2_final,operation1_final)
+        condition=vast.Rvalue(condition)
+        item13=(vast.Assign(right_left,condition),) 
+        res.top_output.items+=item13
+
+    input_item1=find_input_reg(input_list,input_list_length)
+    input_item2=find_input_reg(input_list,input_list_length)
+    while input_item1.name==input_item2.name:
+        input_item1=find_input_reg(input_list,input_list_length)
+        input_item2=find_input_reg(input_list,input_list_length)
+
+    operation1=vast.Plus(input_item1,input_item2)
+    input_item1=find_input_reg(input_list,input_list_length)
+    input_item2=find_input_reg(input_list,input_list_length)
+    while input_item1.name==input_item2.name:
+        input_item1=find_input_reg(input_list,input_list_length)
+        input_item2=find_input_reg(input_list,input_list_length)
+
+    operation2=vast.Plus(input_item1,input_item2)
+    random_no=random.randint(0,1)
+    index=res.top_output.initial_working_key + res.top_output.key_bits
+    res.top_output.key_bits=res.top_output.key_bits+1
+    if random_no==0:
+        wk=vast.Identifier("working_key")
+        index=vast.IntConst(str(index))
+        point=vast.Pointer(wk,index)
+        eq=vast.Eq(point,vast.IntConst("1'b1"))
+        operation1_final=vast.Lvalue(operation1)
+        operation2_final=vast.Rvalue(operation2)
+        condition=vast.Cond(eq,operation1_final,operation2_final)
+        condition=vast.Rvalue(condition)
+        item14=(vast.Assign(right1,condition),) 
+        res.top_output.items+=item14
+
+    else:
+        wk=vast.Identifier("working_key")
+        index=vast.IntConst(str(index))
+        point=vast.Pointer(wk,index)
+        eq=vast.Eq(point,vast.IntConst("1'b1"))
+        operation1_final=vast.Lvalue(operation1)
+        operation2_final=vast.Rvalue(operation2)
+        condition=vast.Cond(eq,operation1_final,operation2_final)
+        condition=vast.Rvalue(condition)
+        item14=(vast.Assign(right1,condition),) 
+        res.top_output.items+=item14
+
+    index_global=index_global+1
+
+
+
+    
+
+   
 
 def spurious_operation_else_if(item,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations):
     
@@ -546,11 +630,13 @@ def spurious_operation_else_if(item,all_reg,list_working_key,user_key,res,cfg,in
         #print(total_statments)
     i=0
     all_non_block=[]
+    global total_mulchain
     total_regs=len(all_reg)-1
     while i<total_statments:
         res.dummy_ops=res.dummy_ops+1
         multi_chain=random.randint(0,1)
-        if multi_chain==1:
+        if multi_chain==1 and total_mulchain<6:
+            total_mulchain=total_mulchain+1
             index=random.randint(0,total_regs)
             reg2="temp"+str(index_global)
             left=reg2
@@ -596,7 +682,7 @@ def spurious_operation_else_if(item,all_reg,list_working_key,user_key,res,cfg,in
     final_block=vast.Block(l1)
     item.true_statement=final_block
     cfg.working_key=cfg.working_key+str(key)
-    spurious_operation_else_if(item.false_statement,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
+    #spurious_operation_else_if(item.false_statement,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
         
 
 
@@ -610,11 +696,13 @@ def spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_l
         #print(total_statments)
         i=0
         all_non_block=[]
+        global total_mulchain
         total_regs=len(all_reg)-1
         while i<total_statments:
             res.dummy_ops=res.dummy_ops+1
-            multi_chain=random.randint(0,1)
-            if multi_chain==1:
+            multi_chain=1#random.randint(0,1)
+            if multi_chain==1 and total_mulchain<10:
+                total_mulchain=total_mulchain+1
                 index=random.randint(0,total_regs)
                 reg2="temp"+str(index_global)
                 left=reg2
@@ -667,7 +755,7 @@ def spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_l
         if it.statement.statements[0].false_statement is not None:
             if type(it.statement.statements[0].false_statement) is vast.IfStatement:
                 item=it.statement.statements[0].false_statement
-                spurious_operation_else_if(item,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
+                #spurious_operation_else_if(item,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
 
 def create_eq(item1,item2):
     item=vast.Eq(item1,item2)
@@ -758,7 +846,7 @@ def create_left_right_reg(all_reg):
 
 
 def add_in_always_block2(item,item_if):
-    if item is vast.Block:
+    if type(item) is vast.Block:
         return 
     elif item.false_statement is not None:
         add_in_always_block2(item.false_statement,item_if)
@@ -783,7 +871,7 @@ def add_in_always_block(item_if,always_block,ops_left):
     
 
 def create_dummy_state(dummy_state_no,input_module,res,all_reg,input_list,input_list_length,all_operations,always_block):
-    no_of_operations=random.randint(1,4)
+    no_of_operations=1#random.randint(1,4)
     print("create dummy states")
     print("no_of_operations")
     print(no_of_operations)
@@ -794,11 +882,13 @@ def create_dummy_state(dummy_state_no,input_module,res,all_reg,input_list,input_
     item_eq=create_eq(item2,item1)
     flag=0
     item_if=0
+    global total_mulchain
     while i<no_of_operations:
         #print("inside loop of number of operations")
         mul_chain=random.randint(0,1)
-        if mul_chain == 1:
+        if mul_chain == 1 and total_mulchain<6:
             #print(type(input_list))
+            total_mulchain=total_mulchain+1
             if flag==0:
                 reg1,reg2,reg2_identifier=create_left_right_reg(all_reg)
                 level=3
@@ -916,8 +1006,8 @@ def add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,re
     for it in input_module.items:
         if type(it) is vast.Always:
             if type(it.statement.statements[0]) is vast.IfStatement:
-                
-                spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
+                if res.dummy_ops<9:               
+                    spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
 
 def dummy_state_function(input_module,res,all_reg,no_of_states,input_list,input_list_length,all_operations,always_block):
     #print(type(input_list))
@@ -1075,6 +1165,8 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     #print(cfg)
     #print("hello")
     #print("perform module obfuscation")
+    global total_mulchain
+    total_mulchain=0
     global total_working_key
     input_module = copy.deepcopy(original_module)
     #print(type(input_module))

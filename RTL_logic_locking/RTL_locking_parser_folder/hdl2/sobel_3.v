@@ -20,16 +20,21 @@ module sobel_0_obf
   GY_address0,
   GY_ce0,
   GY_q0
+  working_key
 );
 
-  parameter ap_ST_fsm_state1 = 8'd1;
-  parameter ap_ST_fsm_state2 = 8'd2;
-  parameter ap_ST_fsm_state3 = 8'd4;
-  parameter ap_ST_fsm_state4 = 8'd8;
-  parameter ap_ST_fsm_state5 = 8'd16;
-  parameter ap_ST_fsm_state6 = 8'd32;
-  parameter ap_ST_fsm_state7 = 8'd64;
-  parameter ap_ST_fsm_state8 = 8'd128;
+  parameter ap_ST_fsm_state1 = 11'd1;
+  parameter ap_ST_fsm_state2 = 11'd2;
+  parameter ap_ST_fsm_state3 = 11'd4;
+  parameter ap_ST_fsm_state4 = 11'd8;
+  parameter ap_ST_fsm_state5 = 11'd16;
+  parameter ap_ST_fsm_state6 = 11'd32;
+  parameter ap_ST_fsm_state7 = 11'd64;
+  parameter ap_ST_fsm_state8 = 11'd128;
+  parameter ap_ST_fsm_state9 = 11'd256;
+  parameter ap_ST_fsm_state10 = 11'd512;
+  parameter ap_ST_fsm_state11 = 11'd1024;
+  
   input ap_clk;
   input ap_rst;
   input ap_start;
@@ -57,7 +62,7 @@ module sobel_0_obf
   reg outdata_we0;
   reg GX_ce0;
   reg GY_ce0;
-  reg [7:0] ap_CS_fsm;
+  reg [10:0] ap_CS_fsm;
   wire ap_CS_fsm_state1;
   wire [8:0] Y_fu_242_p2;
   wire ap_CS_fsm_state3;
@@ -70,6 +75,9 @@ module sobel_0_obf
   wire [0:0] icmp_ln37_fu_256_p2;
   wire [7:0] xor_ln51_fu_378_p2;
   wire ap_CS_fsm_state5;
+  wire ap_CS_fsm_state9;
+  wire ap_CS_fsm_state10;
+  wire ap_CS_fsm_state11;
   wire [0:0] icmp_ln38_fu_384_p2;
   wire [2:0] J_fu_443_p2;
   reg [2:0] J_reg_557;
@@ -134,37 +142,37 @@ module sobel_0_obf
   wire [31:0] mul_ln40_fu_473_p2;
   wire signed [63:0] sext_ln40_fu_478_p1;
   wire [17:0] add_ln_fu_488_p3;
-  reg [7:0] ap_NS_fsm;
+  reg [10:0] ap_NS_fsm;
   wire [31:0] temp100;
+  wire [31:0] temp101;
   wire [31:0] temp102;
   wire [31:0] temp103;
   wire [31:0] temp104;
+  wire [31:0] temp105;
   wire [31:0] temp106;
   wire [31:0] temp107;
   wire [31:0] temp108;
-  wire [31:0] temp110;
+  wire [31:0] temp109;
   wire [31:0] temp111;
   wire [31:0] temp112;
-  wire [31:0] temp114;
+  wire [31:0] temp113;
   wire [31:0] temp115;
   wire [31:0] temp116;
-  wire [31:0] temp118;
+  wire [31:0] temp117;
   wire [31:0] temp119;
   wire [31:0] temp120;
-  wire [31:0] temp122;
-  wire [31:0] temp123;
-  wire [31:0] temp124;
-  wire [31:0] temp126;
-  wire [31:0] temp127;
-  wire [31:0] temp128;
-  wire [31:0] temp130;
-  wire [31:0] temp131;
-  wire [31:0] temp132;
-  wire [31:0] temp134;
-  wire [31:0] temp135;
+  assign temp100 = temp101 * temp102;
+  assign temp102 = (working_key[0] == 1'b1)? GX_q0 + GY_q0 : GX_q0 - GY_q0;
+  assign temp101 = (working_key[1] == 1'b1)? indata_q0 + GY_q0 : indata_q0 - GX_q0;
+  assign temp103 = temp104 * temp105;
+  assign temp105 = (working_key[2] == 1'b1)? GY_q0 + GX_q0 : indata_q0 - GY_q0;
+  assign temp104 = (working_key[3] == 1'b1)? GY_q0 + indata_q0 : indata_q0 - GY_q0;
+  assign temp106 = temp107 * temp108;
+  assign temp108 = (working_key[4] == 1'b1)? GX_q0 - indata_q0 : indata_q0 + GX_q0;
+  assign temp107 = (working_key[5] == 1'b1)? GX_q0 + GY_q0 : GX_q0 - GY_q0;
 
   initial begin
-    #0 ap_CS_fsm = 8'd1;
+    #0 ap_CS_fsm = 11'd1;
   end
 
 
@@ -179,147 +187,243 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[2] == 1'b1) begin
-        I_0_reg_158 <= temp100;
-      end else begin
+      if(working_key[12] == 1'b1) begin
         I_0_reg_158 <= 3'd7;
+      end else begin
+        I_0_reg_158 <= sumY_fu_482_p2;
       end
     end else if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) begin
-      I_0_reg_158 <= I_fu_449_p2;
+      if(working_key[13] == 1'b1) begin
+        I_0_reg_158 <= ap_phi_mux_Y_0_phi_fu_114_p4;
+      end else begin
+        I_0_reg_158 <= I_fu_449_p2;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      if(working_key[5] == 1'b1) begin
-        J_0_reg_194 <= 3'd7;
+      if(working_key[14] == 1'b1) begin
+        J_0_reg_194 <= sumY_1_reg_170;
       end else begin
-        J_0_reg_194 <= temp104;
+        J_0_reg_194 <= 3'd7;
       end
     end else if(1'b1 == ap_CS_fsm_state7) begin
-      J_0_reg_194 <= J_reg_557;
+      if(working_key[15] == 1'b1) begin
+        J_0_reg_194 <= J_reg_557;
+      end else begin
+        J_0_reg_194 <= xor_ln51_fu_378_p2;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((grp_fu_217_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state2)) begin
-      if(working_key[8] == 1'b1) begin
+      if(working_key[18] == 1'b1) begin
         X_0_reg_122 <= 9'd1;
       end else begin
-        X_0_reg_122 <= temp108;
+        X_0_reg_122 <= temp109;
       end
     end else if(1'b1 == ap_CS_fsm_state8) begin
-      X_0_reg_122 <= X_fu_501_p2;
+      if(working_key[19] == 1'b1) begin
+        X_0_reg_122 <= indata_q0;
+      end else begin
+        X_0_reg_122 <= X_fu_501_p2;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((icmp_ln14_fu_224_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[11] == 1'b1) begin
-        Y_0_reg_110 <= temp112;
-      end else begin
+      if(working_key[20] == 1'b1) begin
         Y_0_reg_110 <= Y_fu_242_p2;
+      end else begin
+        Y_0_reg_110 <= sext_ln37_fu_248_p1;
       end
     end else if((1'b1 == ap_CS_fsm_state1) & (ap_start == 1'b1)) begin
-      Y_0_reg_110 <= 9'd1;
+      if(working_key[21] == 1'b1) begin
+        Y_0_reg_110 <= X_fu_501_p2;
+      end else begin
+        Y_0_reg_110 <= 9'd1;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd1) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[14] == 1'b1) begin
-        phi_ln53_reg_205 <= temp116;
-      end else begin
+      if(working_key[24] == 1'b1) begin
         phi_ln53_reg_205 <= 8'd255;
+      end else begin
+        phi_ln53_reg_205 <= temp113;
       end
     end else if((icmp_ln37_fu_256_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state4)) begin
-      phi_ln53_reg_205 <= xor_ln51_fu_378_p2;
+      if(working_key[27] == 1'b1) begin
+        phi_ln53_reg_205 <= temp117;
+      end else begin
+        phi_ln53_reg_205 <= xor_ln51_fu_378_p2;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[17] == 1'b1) begin
-        sumX_0_reg_146 <= temp120;
-      end else begin
+      if(working_key[28] == 1'b1) begin
         sumX_0_reg_146 <= 64'd0;
+      end else begin
+        sumX_0_reg_146 <= X_fu_501_p2;
       end
     end else if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) begin
-      sumX_0_reg_146 <= sumX_1_reg_182;
+      if(working_key[29] == 1'b1) begin
+        sumX_0_reg_146 <= xor_ln51_fu_378_p2;
+      end else begin
+        sumX_0_reg_146 <= sumX_1_reg_182;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      if(working_key[20] == 1'b1) begin
+      if(working_key[30] == 1'b1) begin
         sumX_1_reg_182 <= sumX_0_reg_146;
       end else begin
-        sumX_1_reg_182 <= temp124;
+        sumX_1_reg_182 <= ap_phi_mux_Y_0_phi_fu_114_p4;
       end
     end else if(1'b1 == ap_CS_fsm_state7) begin
-      sumX_1_reg_182 <= sumX_fu_467_p2;
+      if(working_key[31] == 1'b1) begin
+        sumX_1_reg_182 <= sumX_fu_467_p2;
+      end else begin
+        sumX_1_reg_182 <= J_reg_557;
+      end
+    end else if(1'd1 == ap_CS_fsm_state9) begin
+      if(working_key[32] == 1'b1) begin
+        sumX_1_reg_182 <= temp100;
+      end else begin
+        sumX_1_reg_182 <= GX_q0;
+      end
+    end else if(1'd1 == ap_CS_fsm_state9) begin
+      if(working_key[33] == 1'b1) begin
+        sumX_1_reg_182 <= xor_ln51_fu_378_p2;
+      end else begin
+        sumX_1_reg_182 <= temp103;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[23] == 1'b1) begin
-        sumY_0_reg_134 <= temp128;
-      end else begin
+      if(working_key[34] == 1'b1) begin
         sumY_0_reg_134 <= 64'd0;
+      end else begin
+        sumY_0_reg_134 <= sumY_0_reg_134;
       end
     end else if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) begin
-      sumY_0_reg_134 <= sumY_1_reg_170;
+      if(working_key[35] == 1'b1) begin
+        sumY_0_reg_134 <= sext_ln37_fu_248_p1;
+      end else begin
+        sumY_0_reg_134 <= sumY_1_reg_170;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      if(working_key[26] == 1'b1) begin
-        sumY_1_reg_170 <= temp132;
-      end else begin
+      if(working_key[36] == 1'b1) begin
         sumY_1_reg_170 <= sumY_0_reg_134;
+      end else begin
+        sumY_1_reg_170 <= xor_ln51_fu_378_p2;
       end
     end else if(1'b1 == ap_CS_fsm_state7) begin
-      sumY_1_reg_170 <= sumY_fu_482_p2;
+      if(working_key[37] == 1'b1) begin
+        sumY_1_reg_170 <= indata_q0;
+      end else begin
+        sumY_1_reg_170 <= sumY_fu_482_p2;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state6) begin
-      GX_load_reg_572 <= GX_q0;
-      GY_load_reg_577 <= GY_q0;
-      indata_load_reg_567 <= indata_q0;
+      if(working_key[38] == 1'b1) begin
+        GX_load_reg_572 <= GX_q0;
+        GY_load_reg_577 <= GY_q0;
+        indata_load_reg_567 <= indata_q0;
+      end else begin
+        GX_load_reg_572 <= J_reg_557;
+        GY_load_reg_577 <= sumX_0_reg_146;
+        indata_load_reg_567 <= sumX_0_reg_146;
+      end
+    end else if(1'd1 == ap_CS_fsm_state11) begin
+      if(working_key[39] == 1'b1) begin
+        GY_load_reg_577 <= Y_fu_242_p2;
+      end else begin
+        GY_load_reg_577 <= temp106;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((icmp_ln38_fu_384_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state5)) begin
-      J_reg_557 <= J_fu_443_p2;
+      if(working_key[40] == 1'b1) begin
+        J_reg_557 <= J_fu_443_p2;
+      end else begin
+        J_reg_557 <= sext_ln39_1_fu_280_p1;
+      end
+    end else if(1'd1 == ap_CS_fsm_state9) begin
+      if(working_key[41] == 1'b1) begin
+        J_reg_557 <= sext_ln37_fu_248_p1;
+      end else begin
+        J_reg_557 <= I_fu_449_p2;
+      end
+    end else if(1'd1 == ap_CS_fsm_state11) begin
+      if(working_key[42] == 1'b1) begin
+        J_reg_557 <= sumX_fu_467_p2;
+      end else begin
+        J_reg_557 <= sumY_0_reg_134;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state4) begin
-      sext_ln37_reg_521 <= sext_ln37_fu_248_p1;
+      if(working_key[43] == 1'b1) begin
+        sext_ln37_reg_521 <= sext_ln37_fu_248_p1;
+      end else begin
+        sext_ln37_reg_521 <= GX_q0;
+      end
+    end else if(1'd1 == ap_CS_fsm_state10) begin
+      if(working_key[44] == 1'b1) begin
+        sext_ln37_reg_521 <= Y_0_reg_110;
+      end else begin
+        sext_ln37_reg_521 <= X_fu_501_p2;
+      end
+    end else if(1'd1 == ap_CS_fsm_state11) begin
+      if(working_key[45] == 1'b1) begin
+        sext_ln37_reg_521 <= sumX_0_reg_146;
+      end else begin
+        sext_ln37_reg_521 <= xor_ln51_fu_378_p2;
+      end
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      sext_ln39_1_reg_529 <= sext_ln39_1_fu_280_p1;
+      if(working_key[46] == 1'b1) begin
+        sext_ln39_1_reg_529 <= ap_phi_mux_Y_0_phi_fu_114_p4;
+      end else begin
+        sext_ln39_1_reg_529 <= sext_ln39_1_fu_280_p1;
+      end
     end 
   end
 
@@ -371,9 +475,17 @@ module sobel_0_obf
 
   always @(*) begin
     if(1'b1 == ap_CS_fsm_state3) begin
-      grp_fu_217_p0 = Y_0_reg_110;
+      if(working_key[47] == 1'b1) begin
+        grp_fu_217_p0 <= sext_ln39_1_fu_280_p1;
+      end else begin
+        grp_fu_217_p0 = Y_0_reg_110;
+      end
     end else if(1'b1 == ap_CS_fsm_state2) begin
-      grp_fu_217_p0 = ap_phi_mux_Y_0_phi_fu_114_p4;
+      if(working_key[48] == 1'b1) begin
+        grp_fu_217_p0 = ap_phi_mux_Y_0_phi_fu_114_p4;
+      end else begin
+        grp_fu_217_p0 <= I_fu_449_p2;
+      end
     end else begin
       grp_fu_217_p0 = 'bx;
     end
@@ -411,21 +523,33 @@ module sobel_0_obf
     case(ap_CS_fsm)
       ap_ST_fsm_state1: begin
         if((1'b1 == ap_CS_fsm_state1) & (ap_start == 1'b1)) begin
-          ap_NS_fsm = ap_ST_fsm_state2;
+          if(working_key[6] == 1'b1) begin
+            ap_NS_fsm = ap_ST_fsm_state9;
+          end else begin
+            ap_NS_fsm = ap_ST_fsm_state2;
+          end
         end else begin
           ap_NS_fsm = ap_ST_fsm_state1;
         end
       end
       ap_ST_fsm_state2: begin
         if((grp_fu_217_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state2)) begin
-          ap_NS_fsm = ap_ST_fsm_state1;
+          if(working_key[8] == 1'b1) begin
+            ap_NS_fsm = ap_ST_fsm_state10;
+          end else begin
+            ap_NS_fsm = ap_ST_fsm_state1;
+          end
         end else begin
           ap_NS_fsm = ap_ST_fsm_state3;
         end
       end
       ap_ST_fsm_state3: begin
         if((icmp_ln14_fu_224_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state3)) begin
-          ap_NS_fsm = ap_ST_fsm_state2;
+          if(working_key[10] == 1'b1) begin
+            ap_NS_fsm = ap_ST_fsm_state11;
+          end else begin
+            ap_NS_fsm = ap_ST_fsm_state2;
+          end
         end else if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
           ap_NS_fsm = ap_ST_fsm_state4;
         end else begin
@@ -433,15 +557,19 @@ module sobel_0_obf
         end
       end
       ap_ST_fsm_state4: begin
-        if((icmp_ln37_fu_256_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state4)) begin
+        if((icmp_ln37_fu_256_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state4)) if(working_key[49] == 1'b1) begin
+          ap_NS_fsm = ap_ST_fsm_state6;
+        end else begin
           ap_NS_fsm = ap_ST_fsm_state8;
         end else begin
           ap_NS_fsm = ap_ST_fsm_state5;
         end
       end
       ap_ST_fsm_state5: begin
-        if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) begin
+        if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) if(working_key[50] == 1'b1) begin
           ap_NS_fsm = ap_ST_fsm_state4;
+        end else begin
+          ap_NS_fsm = ap_ST_fsm_state10;
         end else begin
           ap_NS_fsm = ap_ST_fsm_state6;
         end
@@ -457,6 +585,27 @@ module sobel_0_obf
       end
       default: begin
         ap_NS_fsm = 'bx;
+      end
+      ap_ST_fsm_state9: begin
+        if(working_key[7] == 1'b1) begin
+          ap_NS_fsm = ap_ST_fsm_state2;
+        end else begin
+          ap_NS_fsm = ap_ST_fsm_state11;
+        end
+      end
+      ap_ST_fsm_state10: begin
+        if(working_key[9] == 1'b1) begin
+          ap_NS_fsm = ap_ST_fsm_state8;
+        end else begin
+          ap_NS_fsm = ap_ST_fsm_state7;
+        end
+      end
+      ap_ST_fsm_state11: begin
+        if(working_key[11] == 1'b1) begin
+          ap_NS_fsm = ap_ST_fsm_state5;
+        end else begin
+          ap_NS_fsm = ap_ST_fsm_state4;
+        end
       end
     endcase
   end
@@ -480,6 +629,9 @@ module sobel_0_obf
   assign ap_CS_fsm_state6 = ap_CS_fsm[32'd5];
   assign ap_CS_fsm_state7 = ap_CS_fsm[32'd6];
   assign ap_CS_fsm_state8 = ap_CS_fsm[32'd7];
+  assign ap_CS_fsm_state9 = ap_CS_fsm[32'd8];
+  assign ap_CS_fsm_state10 = ap_CS_fsm[32'd9];
+  assign ap_CS_fsm_state11 = ap_CS_fsm[32'd10];
   assign ap_phi_mux_Y_0_phi_fu_114_p4 = Y_0_reg_110;
   assign empty_6_fu_230_p2 = (Y_0_reg_110 == 9'd0)? 1'b1 : 1'b0;
   assign empty_7_fu_236_p2 = grp_fu_217_p2 | empty_6_fu_230_p2;
@@ -526,34 +678,15 @@ module sobel_0_obf
   assign zext_ln39_3_fu_437_p1 = $unsigned(sext_ln39_3_fu_433_p1);
   assign zext_ln39_fu_413_p1 = add_ln39_1_fu_408_p2;
   assign zext_ln53_fu_496_p1 = add_ln_fu_488_p3;
-
-  assign temp100 = temp102 * temp103;
-  assign temp103 = (working_key[0] == 1'b1)? GX_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp102 = (working_key[1] == 1'b1)? GY_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp104 = temp106 * temp107;
-  assign temp107 = (working_key[3] == 1'b1)? indata_q0 + GX_q0 : GX_q0 + GY_q0;
-  assign temp106 = (working_key[4] == 1'b1)? indata_q0 + GY_q0 : GY_q0 + indata_q0;
-  assign temp108 = temp110 * temp111;
-  assign temp111 = (working_key[6] == 1'b1)? GX_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp110 = (working_key[7] == 1'b1)? indata_q0 + GX_q0 : GY_q0 + GX_q0;
-  assign temp112 = temp114 * temp115;
-  assign temp115 = (working_key[9] == 1'b1)? indata_q0 + GY_q0 : GY_q0 + indata_q0;
-  assign temp114 = (working_key[10] == 1'b1)? indata_q0 + GX_q0 : GX_q0 + indata_q0;
-  assign temp116 = temp118 * temp119;
-  assign temp119 = (working_key[12] == 1'b1)? GY_q0 + GX_q0 : indata_q0 + GY_q0;
-  assign temp118 = (working_key[13] == 1'b1)? GX_q0 + indata_q0 : GY_q0 + indata_q0;
-  assign temp120 = temp122 * temp123;
-  assign temp123 = (working_key[15] == 1'b1)? GY_q0 + GX_q0 : GX_q0 + indata_q0;
-  assign temp122 = (working_key[16] == 1'b1)? indata_q0 + GX_q0 : indata_q0 + GX_q0;
-  assign temp124 = temp126 * temp127;
-  assign temp127 = (working_key[18] == 1'b1)? GY_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp126 = (working_key[19] == 1'b1)? GX_q0 + indata_q0 : GX_q0 + indata_q0;
-  assign temp128 = temp130 * temp131;
-  assign temp131 = (working_key[21] == 1'b1)? GY_q0 + GX_q0 : GX_q0 + GY_q0;
-  assign temp130 = (working_key[22] == 1'b1)? indata_q0 + GY_q0 : GX_q0 + indata_q0;
-  assign temp132 = temp134 * temp135;
-  assign temp135 = (working_key[24] == 1'b1)? GX_q0 + indata_q0 : GX_q0 + GY_q0;
-  assign temp134 = (working_key[25] == 1'b1)? GX_q0 + GY_q0 : GY_q0 + GX_q0;
+  assign temp109 = temp111 * temp112;
+  assign temp112 = (working_key[16] == 1'b1)? indata_q0 - GX_q0 : GY_q0 + GX_q0;
+  assign temp111 = (working_key[17] == 1'b1)? GY_q0 + GX_q0 : GX_q0 - indata_q0;
+  assign temp113 = temp115 * temp116;
+  assign temp116 = (working_key[22] == 1'b1)? GX_q0 + GY_q0 : indata_q0 - GX_q0;
+  assign temp115 = (working_key[23] == 1'b1)? GY_q0 + GX_q0 : GY_q0 - GX_q0;
+  assign temp117 = temp119 * temp120;
+  assign temp120 = (working_key[25] == 1'b1)? GY_q0 - indata_q0 : GY_q0 + GX_q0;
+  assign temp119 = (working_key[26] == 1'b1)? indata_q0 + GY_q0 : GX_q0 - GY_q0;
 
 endmodule
 

@@ -19,7 +19,8 @@ module sobel_0_obf
   GX_q0,
   GY_address0,
   GY_ce0,
-  GY_q0
+  GY_q0,
+  working_key,
 );
 
   parameter ap_ST_fsm_state1 = 8'd1;
@@ -36,6 +37,7 @@ module sobel_0_obf
   output ap_done;
   output ap_idle;
   output ap_ready;
+  input [26:0]working_key;
   output [17:0] indata_address0;
   output indata_ce0;
   input [7:0] indata_q0;
