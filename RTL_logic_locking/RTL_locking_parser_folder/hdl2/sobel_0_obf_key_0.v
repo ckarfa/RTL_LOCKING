@@ -135,33 +135,7 @@ module sobel_0_obf
   wire signed [63:0] sext_ln40_fu_478_p1;
   wire [17:0] add_ln_fu_488_p3;
   reg [7:0] ap_NS_fsm;
-  wire [31:0] temp100;
-  wire [31:0] temp102;
-  wire [31:0] temp103;
-  wire [31:0] temp104;
-  wire [31:0] temp106;
-  wire [31:0] temp107;
-  wire [31:0] temp108;
-  wire [31:0] temp110;
-  wire [31:0] temp111;
-  wire [31:0] temp112;
-  wire [31:0] temp114;
-  wire [31:0] temp115;
-  wire [31:0] temp116;
-  wire [31:0] temp118;
-  wire [31:0] temp119;
-  wire [31:0] temp120;
-  wire [31:0] temp122;
-  wire [31:0] temp123;
-  wire [31:0] temp124;
-  wire [31:0] temp126;
-  wire [31:0] temp127;
-  wire [31:0] temp128;
-  wire [31:0] temp130;
-  wire [31:0] temp131;
-  wire [31:0] temp132;
-  wire [31:0] temp134;
-  wire [31:0] temp135;
+  input [2:0] working_key;
 
   initial begin
     #0 ap_CS_fsm = 8'd1;
@@ -179,8 +153,8 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[2] == 1'b1) begin
-        I_0_reg_158 <= temp100;
+      if(working_key[0] == 1'b1) begin
+        I_0_reg_158 <= sumX_0_reg_146;
       end else begin
         I_0_reg_158 <= 3'd7;
       end
@@ -192,10 +166,10 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      if(working_key[5] == 1'b1) begin
+      if(working_key[1] == 1'b1) begin
         J_0_reg_194 <= 3'd7;
       end else begin
-        J_0_reg_194 <= temp104;
+        J_0_reg_194 <= GY_q0;
       end
     end else if(1'b1 == ap_CS_fsm_state7) begin
       J_0_reg_194 <= J_reg_557;
@@ -205,11 +179,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((grp_fu_217_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state2)) begin
-      if(working_key[8] == 1'b1) begin
-        X_0_reg_122 <= 9'd1;
-      end else begin
-        X_0_reg_122 <= temp108;
-      end
+      X_0_reg_122 <= 9'd1;
     end else if(1'b1 == ap_CS_fsm_state8) begin
       X_0_reg_122 <= X_fu_501_p2;
     end 
@@ -218,11 +188,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((icmp_ln14_fu_224_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[11] == 1'b1) begin
-        Y_0_reg_110 <= temp112;
-      end else begin
-        Y_0_reg_110 <= Y_fu_242_p2;
-      end
+      Y_0_reg_110 <= Y_fu_242_p2;
     end else if((1'b1 == ap_CS_fsm_state1) & (ap_start == 1'b1)) begin
       Y_0_reg_110 <= 9'd1;
     end 
@@ -231,11 +197,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd1) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[14] == 1'b1) begin
-        phi_ln53_reg_205 <= temp116;
-      end else begin
-        phi_ln53_reg_205 <= 8'd255;
-      end
+      phi_ln53_reg_205 <= 8'd255;
     end else if((icmp_ln37_fu_256_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state4)) begin
       phi_ln53_reg_205 <= xor_ln51_fu_378_p2;
     end 
@@ -244,11 +206,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[17] == 1'b1) begin
-        sumX_0_reg_146 <= temp120;
-      end else begin
-        sumX_0_reg_146 <= 64'd0;
-      end
+      sumX_0_reg_146 <= 64'd0;
     end else if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) begin
       sumX_0_reg_146 <= sumX_1_reg_182;
     end 
@@ -257,11 +215,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      if(working_key[20] == 1'b1) begin
-        sumX_1_reg_182 <= sumX_0_reg_146;
-      end else begin
-        sumX_1_reg_182 <= temp124;
-      end
+      sumX_1_reg_182 <= sumX_0_reg_146;
     end else if(1'b1 == ap_CS_fsm_state7) begin
       sumX_1_reg_182 <= sumX_fu_467_p2;
     end 
@@ -270,11 +224,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((empty_7_fu_236_p2 == 1'd0) & (icmp_ln14_fu_224_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state3)) begin
-      if(working_key[23] == 1'b1) begin
-        sumY_0_reg_134 <= temp128;
-      end else begin
-        sumY_0_reg_134 <= 64'd0;
-      end
+      sumY_0_reg_134 <= 64'd0;
     end else if((icmp_ln38_fu_384_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state5)) begin
       sumY_0_reg_134 <= sumY_1_reg_170;
     end 
@@ -283,11 +233,7 @@ module sobel_0_obf
 
   always @(posedge ap_clk) begin
     if((icmp_ln37_fu_256_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state4)) begin
-      if(working_key[26] == 1'b1) begin
-        sumY_1_reg_170 <= temp132;
-      end else begin
-        sumY_1_reg_170 <= sumY_0_reg_134;
-      end
+      sumY_1_reg_170 <= sumY_0_reg_134;
     end else if(1'b1 == ap_CS_fsm_state7) begin
       sumY_1_reg_170 <= sumY_fu_482_p2;
     end 
@@ -526,34 +472,6 @@ module sobel_0_obf
   assign zext_ln39_3_fu_437_p1 = $unsigned(sext_ln39_3_fu_433_p1);
   assign zext_ln39_fu_413_p1 = add_ln39_1_fu_408_p2;
   assign zext_ln53_fu_496_p1 = add_ln_fu_488_p3;
-
-  assign temp100 = temp102 * temp103;
-  assign temp103 = (working_key[0] == 1'b1)? GX_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp102 = (working_key[1] == 1'b1)? GY_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp104 = temp106 * temp107;
-  assign temp107 = (working_key[3] == 1'b1)? indata_q0 + GX_q0 : GX_q0 + GY_q0;
-  assign temp106 = (working_key[4] == 1'b1)? indata_q0 + GY_q0 : GY_q0 + indata_q0;
-  assign temp108 = temp110 * temp111;
-  assign temp111 = (working_key[6] == 1'b1)? GX_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp110 = (working_key[7] == 1'b1)? indata_q0 + GX_q0 : GY_q0 + GX_q0;
-  assign temp112 = temp114 * temp115;
-  assign temp115 = (working_key[9] == 1'b1)? indata_q0 + GY_q0 : GY_q0 + indata_q0;
-  assign temp114 = (working_key[10] == 1'b1)? indata_q0 + GX_q0 : GX_q0 + indata_q0;
-  assign temp116 = temp118 * temp119;
-  assign temp119 = (working_key[12] == 1'b1)? GY_q0 + GX_q0 : indata_q0 + GY_q0;
-  assign temp118 = (working_key[13] == 1'b1)? GX_q0 + indata_q0 : GY_q0 + indata_q0;
-  assign temp120 = temp122 * temp123;
-  assign temp123 = (working_key[15] == 1'b1)? GY_q0 + GX_q0 : GX_q0 + indata_q0;
-  assign temp122 = (working_key[16] == 1'b1)? indata_q0 + GX_q0 : indata_q0 + GX_q0;
-  assign temp124 = temp126 * temp127;
-  assign temp127 = (working_key[18] == 1'b1)? GY_q0 + indata_q0 : indata_q0 + GX_q0;
-  assign temp126 = (working_key[19] == 1'b1)? GX_q0 + indata_q0 : GX_q0 + indata_q0;
-  assign temp128 = temp130 * temp131;
-  assign temp131 = (working_key[21] == 1'b1)? GY_q0 + GX_q0 : GX_q0 + GY_q0;
-  assign temp130 = (working_key[22] == 1'b1)? indata_q0 + GY_q0 : GX_q0 + indata_q0;
-  assign temp132 = temp134 * temp135;
-  assign temp135 = (working_key[24] == 1'b1)? GX_q0 + indata_q0 : GX_q0 + GY_q0;
-  assign temp134 = (working_key[25] == 1'b1)? GX_q0 + GY_q0 : GY_q0 + GX_q0;
 
 endmodule
 

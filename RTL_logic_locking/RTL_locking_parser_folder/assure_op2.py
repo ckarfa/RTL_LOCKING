@@ -293,7 +293,7 @@ def extract_register_variable(it,all_reg,always_block):
         left_var=it.statement.statements[0].true_statement.statements[i].left
         print(type(left_var.var))
         if type(left_var.var) is vast.Partselect:
-            all_reg.append(left_var.var.var.name)   
+            all_reg.append(left_var)   
             print(type(left_var.var.var.name))
         elif type(it.statement.statements[0].true_statement.statements[i].right.var) is  vast.Identifier:
             right=it.statement.statements[0].true_statement.statements[i].right.var.name
@@ -707,9 +707,13 @@ def spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_l
                 reg2="temp"+str(index_global)
                 left=reg2
                 index_global=index_global+1
-                reg1=it.statement.statements[0].true_statement.statements[i].left.var.name#all_reg[index]
-                temp1=vast.Identifier(reg1)
-                item1=vast.Lvalue(temp1)
+                if type(it.statement.statements[0].true_statement.statements[i].left.var) is vast.Partselect:
+                    item1=it.statement.statements[0].true_statement.statements[i].left
+                else:
+                    reg1=it.statement.statements[0].true_statement.statements[i].left.var.name#all_reg[index]
+                    temp1=vast.Identifier(reg1)
+                    item1=vast.Lvalue(temp1)
+
                 temp2=vast.Identifier(reg2)
                 item2=vast.Rvalue(temp2)
                 ops=vast.NonblockingSubstitution(item1,item2)
@@ -719,9 +723,14 @@ def spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_l
                 #number=random.randint(0,len(all_operations)-1)
                 random_no1=random.randint(0,len(all_operations)-1)
                 ops_right=all_operations[random_no1]
-                ops_left=it.statement.statements[0].true_statement.statements[i].left.var.name
-                ops_left=vast.Identifier(ops_left)
-                ops_left=vast.Lvalue(ops_left)
+                print(it.statement.statements[0].true_statement.statements[i].left.var)
+                print(type(it.statement.statements[0].true_statement.statements[i].left.var))
+                if type(it.statement.statements[0].true_statement.statements[i].left.var) is vast.Partselect:
+                    ops_left=it.statement.statements[0].true_statement.statements[i].left
+                else:
+                    ops_left=it.statement.statements[0].true_statement.statements[i].left.var.name
+                    ops_left=vast.Identifier(ops_left)
+                    ops_left=vast.Lvalue(ops_left)
                 ops=vast.NonblockingSubstitution(ops_left,ops_right)
                 #ops=all_operations[number]
             non_block1=ops #vast.NonblockingSubstitution(item1,item2)
@@ -855,6 +864,8 @@ def add_in_always_block2(item,item_if):
 
 def add_in_always_block(item_if,always_block,ops_left):
     print("add if inside always block")
+    print(ops_left)
+    print(type(ops_left))
     block=always_block[ops_left.name]
     print(block)
     print(len(block.statement.statements))
@@ -871,7 +882,7 @@ def add_in_always_block(item_if,always_block,ops_left):
     
 
 def create_dummy_state(dummy_state_no,input_module,res,all_reg,input_list,input_list_length,all_operations,always_block):
-    no_of_operations=1#random.randint(1,4)
+    no_of_operations=1
     print("create dummy states")
     print("no_of_operations")
     print(no_of_operations)
@@ -885,7 +896,7 @@ def create_dummy_state(dummy_state_no,input_module,res,all_reg,input_list,input_
     global total_mulchain
     while i<no_of_operations:
         #print("inside loop of number of operations")
-        mul_chain=random.randint(0,1)
+        mul_chain=0#random.randint(0,1)
         if mul_chain == 1 and total_mulchain<6:
             #print(type(input_list))
             total_mulchain=total_mulchain+1
@@ -1002,11 +1013,11 @@ def find_all_operations(input_module,all_operations):
     #print(all_operations)
 
 
-def add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations):
+def add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations,no_of_ops):
     for it in input_module.items:
         if type(it) is vast.Always:
             if type(it.statement.statements[0]) is vast.IfStatement:
-                if res.dummy_ops<9:               
+                if res.dummy_ops<no_of_ops:               
                     spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
 
 def dummy_state_function(input_module,res,all_reg,no_of_states,input_list,input_list_length,all_operations,always_block):
@@ -1040,7 +1051,7 @@ def all_inputs(input_module,input_list):
                 if it.list[0].name!="ap_clk" and it.list[0].name!="ap_rst" and it.list[0].name !="ap_done" and it.list[0].name!="ap_start":
                     input_list.append(it.list[0].name)
 
-    if len(input_list)!=0:
+    if len(input_list)!=0 and len(input_list)!=1:
         return input_list
     else:
         for it in input_module.items:
@@ -1083,6 +1094,10 @@ def add_spurious_inside_controller(choose_state,state_no,cp,point,res,cfg):
     else:
         item6=vast.IfStatement(item3,block2,block1) 
     cfg.working_key=cfg.working_key+str(wkey)
+    #item6=vast.Block(item6)
+    list_block=[]
+    list_block.append(item6)
+    item6=vast.Block(list_block)
     if type(cp[state_no-1].statement.statements[0]) is vast.IfStatement:
         cp[state_no-1].statement.statements[0].true_statement=item6
     else:
@@ -1160,6 +1175,16 @@ def add_spurious_transition(controller_pointer,list_working_key,user_key,res,cfg
     print(next_list)
     print(total_states)
 
+def write_parameters(res,input_module):
+    name="working_key"
+    index=res.top_output.initial_working_key + res.top_output.key_bits
+    width1=vast.IntConst(str(index-1))
+    width2=vast.IntConst(str(total_working_key))
+    width=vast.Width(width1,width2)
+    res.top_output.definitions += (vast.Input(name, width,),)
+
+
+
 
 def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,show_output):
     #print(cfg)
@@ -1171,11 +1196,11 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     input_module = copy.deepcopy(original_module)
     #print(type(input_module))
     #print(type(input_module.items))
-    module_instance = input_module.name + "_" + str(len(cfg.modules))
+    module_instance = input_module.name #+ "_" + str(len(cfg.modules))
     #print(module_instance)
 
     res = obfuscation_data.ObfuscationResult()
-    suffix = "_obf"
+    suffix = ""
     res.top_output = obfuscation_data.ObfuscatedModule(module_instance + suffix, input_module.name)
     #print("res.top_output")
     #print(res.top_output.name)
@@ -1333,14 +1358,23 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         dummy_inside_controller(add_dummy_no,controller_pointer,list_working_key,user_key,res,cfg,no_of_states,dummy_states_list,dummy_states_trans_dict)
     print("--------------------Add spurious operations------------------")
     
+    
     if cfg.spurious_ops:
-        add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations)
+        no_of_operations=0
+        for it in input_module.items:
+            if type(it) is vast.Always:
+                no_of_operations=no_of_operations+1
+        
+        no_of_operations=no_of_operations-5
+        no_of_ops=int(input("number of multi ops"))#int((no_of_operations*20)/100)
+        add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations,no_of_ops)
 
     print("--------------------Add spurious transitions-----------------")
     if cfg.spurious_trans:
         add_spurious_transition(controller_pointer,list_working_key,user_key,res,cfg,dummy_states_list,dummy_states_trans_dict)
 
-    
+    print("-------------------Write Parameter----------------------------")
+    write_parameters(res,input_module)
     
 
     res.modules[res.top_output.name] = obf_bits
@@ -1508,7 +1542,7 @@ def main():
 
     ### execution setup
     
-    total_files=1#int(input("Enter the number of files:"))
+    total_files=5#int(input("Enter the number of files:"))
     if total_files<=0:
         raise Exception("atleast single required:")
     i=0
@@ -1516,8 +1550,8 @@ def main():
     all_files=[]
     show_output=[]
     while i<total_files:
-        file_name="sobel.v"#input("Enter the name of file:")
-        top_name="sobel"#input("Enter the name of top module:")
+        file_name=input("Enter the name of file:")
+        top_name=input("Enter the name of top module:")
         all_files.append(file_name)
         (options, args) = optparser.parse_args()
         #print(args)

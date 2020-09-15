@@ -356,7 +356,8 @@ module sobel_0_obf
         end
       end
       ap_ST_fsm_state2: begin
-        if((grp_fu_217_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state2)) if(working_key[0] == 1'b1) begin
+        if((grp_fu_217_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state2)) begin
+	if(working_key[0] == 1'b1) begin
           ap_NS_fsm = ap_ST_fsm_state8;
         end else begin
           ap_NS_fsm = ap_ST_fsm_state1;
@@ -365,7 +366,8 @@ module sobel_0_obf
         end
       end
       ap_ST_fsm_state3: begin
-        if((icmp_ln14_fu_224_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state3)) if(working_key[1] == 1'b1) begin
+        if((icmp_ln14_fu_224_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state3)) begin
+	if(working_key[1] == 1'b1) begin
           ap_NS_fsm = ap_ST_fsm_state2;
         end else begin
           ap_NS_fsm = ap_ST_fsm_state5;
@@ -376,7 +378,8 @@ module sobel_0_obf
         end
       end
       ap_ST_fsm_state4: begin
-        if((icmp_ln37_fu_256_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state4)) if(working_key[2] == 1'b1) begin
+        if((icmp_ln37_fu_256_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state4))begin
+ 	if(working_key[2] == 1'b1) begin
           ap_NS_fsm = ap_ST_fsm_state8;
         end else begin
           ap_NS_fsm = ap_ST_fsm_state7;
