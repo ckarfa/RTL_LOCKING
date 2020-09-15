@@ -17,8 +17,7 @@ module MixColumn_AddRoundKe_en
   statemt_we1,
   statemt_d1,
   statemt_q1,
-  n,
-  working_key
+  n
 );
 
   parameter ap_ST_fsm_state1 = 9'd1;
@@ -214,34 +213,13 @@ module MixColumn_AddRoundKe_en
   wire [3:0] tmp_13_fu_867_p2;
   wire [3:0] tmp_15_fu_877_p2;
   reg [8:0] ap_NS_fsm;
-  wire [31:0] temp140;
-  wire [31:0] temp142;
-  wire [31:0] temp143;
-  wire [31:0] temp144;
-  wire [31:0] temp146;
-  wire [31:0] temp147;
-  wire [31:0] temp148;
-  wire [31:0] temp150;
-  wire [31:0] temp151;
-  wire [31:0] temp152;
-  wire [31:0] temp154;
-  wire [31:0] temp155;
-  wire [31:0] temp156;
-  wire [31:0] temp158;
-  wire [31:0] temp159;
-  wire [31:0] temp160;
-  wire [31:0] temp162;
-  wire [31:0] temp163;
-  wire [31:0] temp164;
-  wire [31:0] temp166;
-  wire [31:0] temp167;
-  wire [31:0] temp168;
-  wire [31:0] temp170;
-  wire [31:0] temp171;
-  wire [31:0] temp172;
-  wire [31:0] temp174;
-  wire [31:0] temp175;
-  input [48:0] working_key;
+  wire [31:0] temp124;
+  wire [31:0] temp126;
+  wire [31:0] temp127;
+  wire [31:0] temp128;
+  wire [31:0] temp130;
+  wire [31:0] temp131;
+  input [23:0] working_key;
 
   initial begin
     #0 ap_CS_fsm = 9'd1;
@@ -304,10 +282,10 @@ module MixColumn_AddRoundKe_en
 
   always @(posedge ap_clk) begin
     if((exitcond1_fu_309_p2 == 1'd1) & (1'b1 == ap_CS_fsm_state2)) begin
-      if(working_key[28] == 1'b1) begin
+      if(working_key[20] == 1'b1) begin
         j_1_reg_266 <= 3'd0;
       end else begin
-        j_1_reg_266 <= temp140;
+        j_1_reg_266 <= temp124;
       end
     end else if(1'b1 == ap_CS_fsm_state9) begin
       j_1_reg_266 <= j_2_reg_1042;
@@ -317,10 +295,10 @@ module MixColumn_AddRoundKe_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state6) begin
-      if(working_key[31] == 1'b1) begin
-        j_reg_255 <= j_3_reg_895;
+      if(working_key[23] == 1'b1) begin
+        j_reg_255 <= temp128;
       end else begin
-        j_reg_255 <= temp144;
+        j_reg_255 <= j_3_reg_895;
       end
     end else if((1'b1 == ap_CS_fsm_state1) & (ap_start == 1'b1)) begin
       j_reg_255 <= 3'd0;
@@ -330,41 +308,25 @@ module MixColumn_AddRoundKe_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state7) begin
-      if(working_key[34] == 1'b1) begin
-        j_2_reg_1042 <= j_2_fu_833_p2;
-      end else begin
-        j_2_reg_1042 <= temp148;
-      end
+      j_2_reg_1042 <= j_2_fu_833_p2;
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state2) begin
-      if(working_key[37] == 1'b1) begin
-        j_3_reg_895 <= temp152;
-      end else begin
-        j_3_reg_895 <= j_3_fu_315_p2;
-      end
+      j_3_reg_895 <= j_3_fu_315_p2;
     end 
   end
 
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state4) begin
-      if(working_key[48] == 1'b1) begin
-        tmp6_reg_1019 <= tmp6_fu_600_p2;
-        tmp9_reg_1029 <= tmp9_fu_684_p2;
-        tmp_41_reg_1034 <= tmp_41_fu_782_p2;
-        word3_load_2_reg_1024 <= word3_q1;
-        x_4_reg_1009 <= statemt_q1;
-      end else begin
-        tmp6_reg_1019 <= temp156;
-        tmp9_reg_1029 <= temp160;
-        tmp_41_reg_1034 <= temp164;
-        word3_load_2_reg_1024 <= temp168;
-        x_4_reg_1009 <= temp172;
-      end
+      tmp6_reg_1019 <= tmp6_fu_600_p2;
+      tmp9_reg_1029 <= tmp9_fu_684_p2;
+      tmp_41_reg_1034 <= tmp_41_fu_782_p2;
+      word3_load_2_reg_1024 <= word3_q1;
+      x_4_reg_1009 <= statemt_q1;
     end 
   end
 
@@ -821,33 +783,12 @@ module MixColumn_AddRoundKe_en
     tmp_16_reg_1083[63:4] <= 60'b000000000000000000000000000000000000000000000000000000000000;
   end
 
-  assign temp140 = temp142 * temp143;
-  assign temp143 = (working_key[26] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
-  assign temp142 = (working_key[27] == 1'b1)? n + statemt_q1 : statemt_q1 + n;
-  assign temp144 = temp146 * temp147;
-  assign temp147 = (working_key[29] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
-  assign temp146 = (working_key[30] == 1'b1)? n + statemt_q1 : statemt_q1 + n;
-  assign temp148 = temp150 * temp151;
-  assign temp151 = (working_key[32] == 1'b1)? statemt_q0 + n : statemt_q0 + statemt_q1;
-  assign temp150 = (working_key[33] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q1 + n;
-  assign temp152 = temp154 * temp155;
-  assign temp155 = (working_key[35] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
-  assign temp154 = (working_key[36] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + n;
-  assign temp156 = temp158 * temp159;
-  assign temp159 = (working_key[38] == 1'b1)? n + statemt_q1 : statemt_q1 + statemt_q0;
-  assign temp158 = (working_key[39] == 1'b1)? statemt_q1 + n : statemt_q1 + statemt_q0;
-  assign temp160 = temp162 * temp163;
-  assign temp163 = (working_key[40] == 1'b1)? statemt_q1 + n : statemt_q0 + statemt_q1;
-  assign temp162 = (working_key[41] == 1'b1)? n + statemt_q1 : n + statemt_q0;
-  assign temp164 = temp166 * temp167;
-  assign temp167 = (working_key[42] == 1'b1)? statemt_q0 + n : statemt_q1 + n;
-  assign temp166 = (working_key[43] == 1'b1)? n + statemt_q0 : n + statemt_q1;
-  assign temp168 = temp170 * temp171;
-  assign temp171 = (working_key[44] == 1'b1)? statemt_q1 + statemt_q0 : n + statemt_q0;
-  assign temp170 = (working_key[45] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
-  assign temp172 = temp174 * temp175;
-  assign temp175 = (working_key[46] == 1'b1)? statemt_q1 + n : statemt_q0 + n;
-  assign temp174 = (working_key[47] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q1 + n;
+  assign temp124 = temp126 * temp127;
+  assign temp127 = (working_key[18] == 1'b1)? statemt_q0 + n : statemt_q0 + n;
+  assign temp126 = (working_key[19] == 1'b1)? statemt_q1 + statemt_q0 : n + statemt_q0;
+  assign temp128 = temp130 * temp131;
+  assign temp131 = (working_key[21] == 1'b1)? statemt_q1 + n : statemt_q1 + statemt_q0;
+  assign temp130 = (working_key[22] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
 
 endmodule
 

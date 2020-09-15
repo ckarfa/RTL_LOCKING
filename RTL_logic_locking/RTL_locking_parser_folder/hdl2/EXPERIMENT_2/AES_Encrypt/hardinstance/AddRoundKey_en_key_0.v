@@ -17,8 +17,7 @@ module AddRoundKey_en
   statemt_we1,
   statemt_d1,
   statemt_q1,
-  n,
-  working_key
+  n
 );
 
   parameter ap_ST_fsm_state1 = 5'd1;
@@ -117,25 +116,13 @@ module AddRoundKey_en
   wire [31:0] word1_load_2_cast_fu_283_p1;
   wire [31:0] word1_load_3_cast_fu_293_p1;
   reg [4:0] ap_NS_fsm;
-  wire [31:0] temp100;
-  wire [31:0] temp102;
-  wire [31:0] temp103;
-  wire [31:0] temp104;
-  wire [31:0] temp106;
-  wire [31:0] temp107;
   wire [31:0] temp108;
   wire [31:0] temp110;
   wire [31:0] temp111;
   wire [31:0] temp112;
   wire [31:0] temp114;
   wire [31:0] temp115;
-  wire [31:0] temp116;
-  wire [31:0] temp118;
-  wire [31:0] temp119;
-  wire [31:0] temp120;
-  wire [31:0] temp122;
-  wire [31:0] temp123;
-  input [48:0] working_key;
+  input [23:0] working_key;
 
   initial begin
     #0 ap_CS_fsm = 5'd1;
@@ -178,10 +165,10 @@ module AddRoundKey_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state5) begin
-      if(working_key[2] == 1'b1) begin
-        j_reg_134 <= temp100;
-      end else begin
+      if(working_key[8] == 1'b1) begin
         j_reg_134 <= j_4_reg_311;
+      end else begin
+        j_reg_134 <= temp108;
       end
     end else if((1'b1 == ap_CS_fsm_state1) & (ap_start == 1'b1)) begin
       j_reg_134 <= 3'd0;
@@ -191,10 +178,10 @@ module AddRoundKey_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state2) begin
-      if(working_key[5] == 1'b1) begin
-        j_4_reg_311 <= j_4_fu_161_p2;
+      if(working_key[11] == 1'b1) begin
+        j_4_reg_311 <= temp112;
       end else begin
-        j_4_reg_311 <= temp104;
+        j_4_reg_311 <= j_4_fu_161_p2;
       end
     end 
   end
@@ -202,17 +189,10 @@ module AddRoundKey_en
 
   always @(posedge ap_clk) begin
     if((exitcond_fu_155_p2 == 1'd0) & (1'b1 == ap_CS_fsm_state2)) begin
-      if(working_key[14] == 1'b1) begin
-        statemt_addr_24_reg_334[3:2] <= temp108;
-        statemt_addr_reg_322[3:2] <= temp112;
-        tmp_43_reg_327 <= temp116;
-        tmp_s_reg_316[3:2] <= temp120;
-      end else begin
-        statemt_addr_24_reg_334[3:2] <= tmp_47_fu_195_p1[3:2];
-        statemt_addr_reg_322[3:2] <= tmp_42_fu_179_p1[3:2];
-        tmp_43_reg_327 <= tmp_43_fu_184_p2;
-        tmp_s_reg_316[3:2] <= tmp_s_fu_171_p3[3:2];
-      end
+      statemt_addr_24_reg_334[3:2] <= tmp_47_fu_195_p1[3:2];
+      statemt_addr_reg_322[3:2] <= tmp_42_fu_179_p1[3:2];
+      tmp_43_reg_327 <= tmp_43_fu_184_p2;
+      tmp_s_reg_316[3:2] <= tmp_s_fu_171_p3[3:2];
     end 
   end
 
@@ -478,24 +458,12 @@ module AddRoundKey_en
     statemt_addr_26_reg_374[4] <= 1'b0;
   end
 
-  assign temp100 = temp102 * temp103;
-  assign temp103 = (working_key[0] == 1'b1)? n + statemt_q1 : statemt_q0 + n;
-  assign temp102 = (working_key[1] == 1'b1)? n + statemt_q0 : n + statemt_q0;
-  assign temp104 = temp106 * temp107;
-  assign temp107 = (working_key[3] == 1'b1)? statemt_q0 + n : n + statemt_q1;
-  assign temp106 = (working_key[4] == 1'b1)? n + statemt_q1 : n + statemt_q1;
   assign temp108 = temp110 * temp111;
-  assign temp111 = (working_key[6] == 1'b1)? statemt_q1 + n : statemt_q1 + n;
-  assign temp110 = (working_key[7] == 1'b1)? n + statemt_q1 : statemt_q1 + n;
+  assign temp111 = (working_key[6] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + n;
+  assign temp110 = (working_key[7] == 1'b1)? n + statemt_q0 : statemt_q0 + statemt_q1;
   assign temp112 = temp114 * temp115;
-  assign temp115 = (working_key[8] == 1'b1)? statemt_q1 + n : statemt_q1 + n;
-  assign temp114 = (working_key[9] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q1 + statemt_q0;
-  assign temp116 = temp118 * temp119;
-  assign temp119 = (working_key[10] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q1 + statemt_q0;
-  assign temp118 = (working_key[11] == 1'b1)? statemt_q1 + statemt_q0 : n + statemt_q0;
-  assign temp120 = temp122 * temp123;
-  assign temp123 = (working_key[12] == 1'b1)? n + statemt_q0 : statemt_q1 + n;
-  assign temp122 = (working_key[13] == 1'b1)? n + statemt_q1 : statemt_q1 + statemt_q0;
+  assign temp115 = (working_key[9] == 1'b1)? n + statemt_q1 : n + statemt_q0;
+  assign temp114 = (working_key[10] == 1'b1)? statemt_q1 + statemt_q0 : n + statemt_q0;
 
 endmodule
 

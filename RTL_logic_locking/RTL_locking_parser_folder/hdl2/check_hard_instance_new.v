@@ -305,22 +305,7 @@ module check
   wire [31:0] temp104;
   wire [31:0] temp106;
   wire [31:0] temp107;
-  wire [31:0] temp108;
-  wire [31:0] temp110;
-  wire [31:0] temp111;
-  wire [31:0] temp112;
-  wire [31:0] temp114;
-  wire [31:0] temp115;
-  wire [31:0] temp116;
-  wire [31:0] temp118;
-  wire [31:0] temp119;
-  wire [31:0] temp120;
-  wire [31:0] temp122;
-  wire [31:0] temp123;
-  wire [31:0] temp124;
-  wire [31:0] temp126;
-  wire [31:0] temp127;
-  input [20:0] working_key;
+  input [5:0] working_key;
 
   initial begin
     #0 ap_CS_fsm = 27'd1;
@@ -457,11 +442,7 @@ module check
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state4) begin
-      if(working_key[8] == 1'b1) begin
-        i_1_reg_720 <= i_3_reg_1706;
-      end else begin
-        i_1_reg_720 <= temp108;
-      end
+      i_1_reg_720 <= i_3_reg_1706;
     end else if((1'b1 == ap_CS_fsm_state2) & (exitcond2_fu_809_p2 == 1'd1)) begin
       i_1_reg_720 <= 7'd0;
     end 
@@ -470,11 +451,7 @@ module check
 
   always @(posedge ap_clk) begin
     if((1'b1 == ap_CS_fsm_state2) & (exitcond2_fu_809_p2 == 1'd0)) begin
-      if(working_key[11] == 1'b1) begin
-        i_reg_709 <= temp112;
-      end else begin
-        i_reg_709 <= i_2_fu_815_p2;
-      end
+      i_reg_709 <= i_2_fu_815_p2;
     end else if((ap_start == 1'b1) & (1'b1 == ap_CS_fsm_state1)) begin
       i_reg_709 <= 6'd0;
     end 
@@ -483,11 +460,7 @@ module check
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state27) begin
-      if(working_key[14] == 1'b1) begin
-        j_reg_752 <= temp116;
-      end else begin
-        j_reg_752 <= j_1_reg_2143;
-      end
+      j_reg_752 <= j_1_reg_2143;
     end else if((1'b1 == ap_CS_fsm_state25) & (tmp_109_fu_1638_p2 == 1'd1)) begin
       j_reg_752 <= 4'd0;
     end 
@@ -496,11 +469,7 @@ module check
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state27) begin
-      if(working_key[17] == 1'b1) begin
-        main_result1_reg_742 <= temp120;
-      end else begin
-        main_result1_reg_742 <= main_result_fu_1689_p2;
-      end
+      main_result1_reg_742 <= main_result_fu_1689_p2;
     end else if((1'b1 == ap_CS_fsm_state25) & (tmp_109_fu_1638_p2 == 1'd1)) begin
       main_result1_reg_742 <= main_result_cast_fu_1649_p1;
     end 
@@ -509,11 +478,7 @@ module check
 
   always @(posedge ap_clk) begin
     if((1'b1 == ap_CS_fsm_state25) & (tmp_109_fu_1638_p2 == 1'd0)) begin
-      if(working_key[20] == 1'b1) begin
-        n_inst_reg_731 <= n_inst_1_reg_1800;
-      end else begin
-        n_inst_reg_731 <= temp124;
-      end
+      n_inst_reg_731 <= n_inst_1_reg_1800;
     end else if((1'b1 == ap_CS_fsm_state3) & (exitcond1_fu_826_p2 == 1'd1)) begin
       n_inst_reg_731 <= 32'd0;
     end 
@@ -1384,26 +1349,11 @@ module check
   end
 
   assign temp100 = temp102 * temp103;
-  assign temp103 = (working_key[0] == 1'b1)? tmp_49_fu_1108_p1 + tmp_91_fu_1225_p2 : funct_fu_882_p1 + hilo_fu_1348_p2;
-  assign temp102 = (working_key[1] == 1'b1)? pc_3_fu_913_p3 + tmp_63_fu_1083_p1 : main_result_cast_fu_1649_p1 + tmp_96_fu_1255_p1;
+  assign temp103 = (working_key[0] == 1'b1)? hilo_1_fu_1320_p00 + ap_CS_fsm_state15 : tmp_2_fu_838_p1 + ap_CS_fsm_state17;
+  assign temp102 = (working_key[1] == 1'b1)? exitcond1_fu_826_p2 + tmp_104_fu_1488_p3 : ap_CS_fsm_state2 + tmp_94_fu_995_p1;
   assign temp104 = temp106 * temp107;
-  assign temp107 = (working_key[3] == 1'b1)? ap_CS_fsm_state27 + tmp_121_cast_fu_1495_p1 : outData_address0 + tmp_15_fu_1603_p1;
-  assign temp106 = (working_key[4] == 1'b1)? exitcond_fu_1653_p2 + tmp_50_fu_1113_p1 : tmp_fu_821_p1 + tmp_60_fu_1344_p0;
-  assign temp108 = temp110 * temp111;
-  assign temp111 = (working_key[6] == 1'b1)? hilo_1_fu_1320_p00 + ap_CS_fsm_state22 : ap_CS_fsm_state17 + tmp_103_fu_975_p1;
-  assign temp110 = (working_key[7] == 1'b1)? tmp_10_fu_1193_p1 + tmp_27_fu_1528_p1 : A_address0 + tmp_111_fu_1644_p2;
-  assign temp112 = temp114 * temp115;
-  assign temp115 = (working_key[9] == 1'b1)? tmp_17_fu_1561_p1 + hilo_1_fu_1320_p2 : tmp_fu_821_p1 + tmp_78_fu_1286_p1;
-  assign temp114 = (working_key[10] == 1'b1)? tmp_105_fu_1467_p3 + tmp_106_fu_1533_p1 : outData_address0 + exitcond2_fu_809_p2;
-  assign temp116 = temp118 * temp119;
-  assign temp119 = (working_key[12] == 1'b1)? outData_load_cast_fu_1675_p1 + tmp_69_fu_1301_p2 : tmp_50_fu_1113_p1 + tmp_23_fu_1557_p1;
-  assign temp118 = (working_key[13] == 1'b1)? tmp_5_fu_1625_p1 + tmp_26_fu_1513_p2 : hilo_fu_1348_p1 + tmp_27_fu_1528_p1;
-  assign temp120 = temp122 * temp123;
-  assign temp123 = (working_key[15] == 1'b1)? Lo_1_fu_1354_p1 + tmp_15_fu_1603_p1 : tmp_4_cast_fu_863_p4 + tmp_6_fu_873_p1;
-  assign temp122 = (working_key[16] == 1'b1)? ap_CS_fsm_state27 + tmp_117_fu_1153_p2 : tmp_71_fu_1040_p1 + tmp_99_fu_985_p1;
-  assign temp124 = temp126 * temp127;
-  assign temp127 = (working_key[18] == 1'b1)? main_result_cast_fu_1649_p1 + tmp_81_fu_1275_p1 : tmp_40_fu_1575_p1 + ap_CS_fsm_state21;
-  assign temp126 = (working_key[19] == 1'b1)? tmp_111_fu_1644_p2 + ap_CS_fsm_state6 : tmp_97_fu_1259_p1 + tmp_118_fu_1438_p3;
+  assign temp107 = (working_key[3] == 1'b1)? funct_fu_882_p1 + exitcond2_fu_809_p2 : tmp_130_cast_fu_1685_p1 + tmp_73_fu_1290_p2;
+  assign temp106 = (working_key[4] == 1'b1)? n_inst_1_fu_903_p2 + tmp_fu_821_p1 : pc_1_fu_886_p2 + ap_CS_fsm_state17;
 
 endmodule
 

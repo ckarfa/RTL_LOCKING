@@ -20,8 +20,7 @@ module aes_func_call_en (
         statemt1_ce0,
         statemt1_we0,
         statemt1_d0,
-        statemt1_q0,
-        working_key
+        statemt1_q0
 );
 
 parameter    ap_ST_fsm_state1 = 13'd1;
@@ -138,7 +137,6 @@ wire    ap_CS_fsm_state9;
 reg    grp_AddRoundKey_fu_138_ap_start_reg;
 wire    ap_CS_fsm_state10;
 reg   [12:0] ap_NS_fsm;
-input [48:0] working_key;
 
 // power-on initialization
 initial begin
@@ -184,8 +182,7 @@ MixColumn_AddRoundKe grp_MixColumn_AddRoundKe_fu_122(
     .statemt_we1(grp_MixColumn_AddRoundKe_fu_122_statemt_we1),
     .statemt_d1(grp_MixColumn_AddRoundKe_fu_122_statemt_d1),
     .statemt_q1(statemt_q1),
-    .n(i_1_reg_99),
-    .working_key(working_key)
+    .n(i_1_reg_99)
 );
 
 ByteSub_ShiftRow grp_ByteSub_ShiftRow_fu_131(
@@ -205,7 +202,6 @@ ByteSub_ShiftRow grp_ByteSub_ShiftRow_fu_131(
     .statemt_we1(grp_ByteSub_ShiftRow_fu_131_statemt_we1),
     .statemt_d1(grp_ByteSub_ShiftRow_fu_131_statemt_d1),
     .statemt_q1(statemt_q1)
-    .working_key(working_key)
 );
 
 AddRoundKey grp_AddRoundKey_fu_138(
@@ -225,8 +221,7 @@ AddRoundKey grp_AddRoundKey_fu_138(
     .statemt_we1(grp_AddRoundKey_fu_138_statemt_we1),
     .statemt_d1(grp_AddRoundKey_fu_138_statemt_d1),
     .statemt_q1(statemt_q1),
-    .n(grp_AddRoundKey_fu_138_n),
-    .working_key(working_key)
+    .n(grp_AddRoundKey_fu_138_n)
 );
 
 always @ (posedge ap_clk) begin

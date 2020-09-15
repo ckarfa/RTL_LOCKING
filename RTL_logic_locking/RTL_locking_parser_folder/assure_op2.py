@@ -1542,7 +1542,7 @@ def main():
 
     ### execution setup
     
-    total_files=5#int(input("Enter the number of files:"))
+    total_files=int(input("Enter the number of files:"))
     if total_files<=0:
         raise Exception("atleast single required:")
     i=0

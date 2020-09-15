@@ -16,8 +16,7 @@ module ByteSub_ShiftRow_en
   statemt_ce1,
   statemt_we1,
   statemt_d1,
-  statemt_q1,
-  working_key
+  statemt_q1
 );
 
   parameter ap_ST_fsm_state1 = 16'd1;
@@ -163,19 +162,13 @@ module ByteSub_ShiftRow_en
   wire signed [31:0] tmp_66_fu_424_p0;
   wire signed [31:0] tmp_67_fu_429_p0;
   reg [15:0] ap_NS_fsm;
-  wire [31:0] temp124;
-  wire [31:0] temp126;
-  wire [31:0] temp127;
-  wire [31:0] temp128;
-  wire [31:0] temp130;
-  wire [31:0] temp131;
-  wire [31:0] temp132;
-  wire [31:0] temp134;
-  wire [31:0] temp135;
-  wire [31:0] temp136;
-  wire [31:0] temp138;
-  wire [31:0] temp139;
-  input [48:0] working_key;
+  wire [31:0] temp116;
+  wire [31:0] temp118;
+  wire [31:0] temp119;
+  wire [31:0] temp120;
+  wire [31:0] temp122;
+  wire [31:0] temp123;
+  input [23:0] working_key;
 
   initial begin
     #0 ap_CS_fsm = 16'd1;
@@ -212,8 +205,8 @@ module ByteSub_ShiftRow_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state9) begin
-      if(working_key[17] == 1'b1) begin
-        reg_330 <= temp124;
+      if(working_key[14] == 1'b1) begin
+        reg_330 <= temp116;
       end else begin
         reg_330 <= Sbox_q0;
       end
@@ -225,10 +218,10 @@ module ByteSub_ShiftRow_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state9) begin
-      if(working_key[20] == 1'b1) begin
-        reg_335 <= Sbox_q1;
+      if(working_key[17] == 1'b1) begin
+        reg_335 <= temp120;
       end else begin
-        reg_335 <= temp128;
+        reg_335 <= Sbox_q1;
       end
     end else if(1'b1 == ap_CS_fsm_state4) begin
       reg_335 <= Sbox_q0;
@@ -238,13 +231,8 @@ module ByteSub_ShiftRow_en
 
   always @(posedge ap_clk) begin
     if(1'b1 == ap_CS_fsm_state8) begin
-      if(working_key[25] == 1'b1) begin
-        Sbox_load_10_reg_661 <= Sbox_q1;
-        Sbox_load_9_reg_656 <= Sbox_q0;
-      end else begin
-        Sbox_load_10_reg_661 <= temp132;
-        Sbox_load_9_reg_656 <= temp136;
-      end
+      Sbox_load_10_reg_661 <= Sbox_q1;
+      Sbox_load_9_reg_656 <= Sbox_q0;
     end 
   end
 
@@ -678,18 +666,12 @@ module ByteSub_ShiftRow_en
   assign tmp_fu_344_p1 = tmp_fu_344_p0;
   assign tmp_s_fu_349_p0 = statemt_q1;
   assign tmp_s_fu_349_p1 = tmp_s_fu_349_p0;
-  assign temp124 = temp126 * temp127;
-  assign temp127 = (working_key[15] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
-  assign temp126 = (working_key[16] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
-  assign temp128 = temp130 * temp131;
-  assign temp131 = (working_key[18] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
-  assign temp130 = (working_key[19] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
-  assign temp132 = temp134 * temp135;
-  assign temp135 = (working_key[21] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q1 + statemt_q0;
-  assign temp134 = (working_key[22] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q1 + statemt_q0;
-  assign temp136 = temp138 * temp139;
-  assign temp139 = (working_key[23] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
-  assign temp138 = (working_key[24] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
+  assign temp116 = temp118 * temp119;
+  assign temp119 = (working_key[12] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q1 + statemt_q0;
+  assign temp118 = (working_key[13] == 1'b1)? statemt_q1 + statemt_q0 : statemt_q0 + statemt_q1;
+  assign temp120 = temp122 * temp123;
+  assign temp123 = (working_key[15] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
+  assign temp122 = (working_key[16] == 1'b1)? statemt_q0 + statemt_q1 : statemt_q0 + statemt_q1;
 
 endmodule
 
