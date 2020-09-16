@@ -290,11 +290,16 @@ def extract_register_variable(it,all_reg,always_block):
         #left=it.statement.statements[0].true_statement.statements[i].left.var.name
         #print(type(it.statement.statements[0].true_statement.statements[0]))
         #right_var=it.statement.statements[0].true_statement.statements[i].right
+        print(it.statement.statements[0].true_statement.statements[i])
+        print(type(it.statement.statements[0].true_statement.statements[i]))
+        
         left_var=it.statement.statements[0].true_statement.statements[i].left
         print(type(left_var.var))
         if type(left_var.var) is vast.Partselect:
             all_reg.append(left_var)   
             print(type(left_var.var.var.name))
+            lhs=it.statement.statements[0].true_statement.statements[i].left.var.var.name
+            always_block[lhs]=it
         elif type(it.statement.statements[0].true_statement.statements[i].right.var) is  vast.Identifier:
             right=it.statement.statements[0].true_statement.statements[i].right.var.name
             left=it.statement.statements[0].true_statement.statements[i].right.var.name
@@ -864,8 +869,9 @@ def add_in_always_block2(item,item_if):
 
 def add_in_always_block(item_if,always_block,ops_left):
     print("add if inside always block")
-    print(ops_left)
-    print(type(ops_left))
+    #print(ops_left)
+    #print(type(ops_left))
+    
     block=always_block[ops_left.name]
     print(block)
     print(len(block.statement.statements))
@@ -1177,6 +1183,7 @@ def add_spurious_transition(controller_pointer,list_working_key,user_key,res,cfg
 
 def write_parameters(res,input_module):
     name="working_key"
+    global total_working_key
     index=res.top_output.initial_working_key + res.top_output.key_bits
     width1=vast.IntConst(str(index-1))
     width2=vast.IntConst(str(total_working_key))
@@ -1219,6 +1226,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     for p in input_module.portlist.ports:
         res.top_output.ports += (p,)
     #print(res.top_output.ports)
+    
 
     if cfg.verbose:
         print("=Parameter definition")
@@ -1307,7 +1315,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     for it in input_module.items:
         if type(it) is vast.Always:
             if type(it.statement.statements[0]) is vast.IfStatement:
-                #print("normal always")
+                print("normal always")
                 extract_register_variable(it,all_reg,always_block)
     
     print(all_reg)  
@@ -1340,6 +1348,12 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
                 #it = analyze_item1(it,res,list_notvalid)
         if it not in list_notvalid:
             apply_operation_obf=0
+            if type(it) is vast.Assign:
+                print(it.right.var)
+                if type(it.right.var) is vast.Sll:
+                    print("hii")
+                    #analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key)
+                
             #it = analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key)
             #it=  post_modification(it,res,input_module,it)
             #it = part_select_module(it,res,input_module,it)
@@ -1365,17 +1379,17 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
             if type(it) is vast.Always:
                 no_of_operations=no_of_operations+1
         
-        no_of_operations=no_of_operations-5
-        no_of_ops=int(input("number of multi ops"))#int((no_of_operations*20)/100)
+        no_of_operations=no_of_operations
+        no_of_ops=2#int((no_of_operations*35)/100)
         add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations,no_of_ops)
 
     print("--------------------Add spurious transitions-----------------")
     if cfg.spurious_trans:
         add_spurious_transition(controller_pointer,list_working_key,user_key,res,cfg,dummy_states_list,dummy_states_trans_dict)
 
+    
     print("-------------------Write Parameter----------------------------")
     write_parameters(res,input_module)
-    
 
     res.modules[res.top_output.name] = obf_bits
 
@@ -1542,7 +1556,7 @@ def main():
 
     ### execution setup
     
-    total_files=int(input("Enter the number of files:"))
+    total_files=3#int(input("Enter the number of files:"))
     if total_files<=0:
         raise Exception("atleast single required:")
     i=0
@@ -1670,6 +1684,8 @@ def main():
     if os.path.isfile("parsetab.py"):
         os.remove("parsetab.py")
     ### everything is completed
+
+    
 
     i=0
     while i<len(show_output):
