@@ -1,14 +1,12 @@
-# ASSURE
-
-ASSURE is a prototype tool for RTL obfuscation jointly developed by Politecnico di Milano and New York University.
+# ASSURE++
 
 Welcome to ASSURE!
 
-This is a tool for logic locking at register-transfer level. With ASSURE, designers can apply logic locking to existing
+This is a tool for logic locking at register-transfer level. With ASSURE++, designers can apply logic locking to existing
 RTL designs, including manually-designed intellectual property (IP) cores or HLS-generated components. Currently, 
-ASSURE supports only Verilog designs.
+ASSURE++ supports only Verilog designs.
 
-For any questions/concerns, please email [Christian Pilato](christian.pilato@polimi.it).
+For any questions/concerns,.
 
 ## Requirements ##
 
@@ -197,9 +195,5 @@ the multiplication is not obfuscated because there are no other bits.
 
 ### Contact ###
 
-Christian Pilato (Politecnico di Milano): [christian.pilato@polimi.it](christian.pilato@polimi.it)
 
-Ramesh Karri (New York University): [rkarri@nyu.edu](rkarri@nyu.edu)
-
-Siddharth Garg (New York University): [siddharth.garg@nyu.edu](siddharth.garg@nyu.edu)
 
