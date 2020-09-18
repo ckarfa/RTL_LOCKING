@@ -80,7 +80,7 @@ def generate_wrappers(input_module, res, cfg):
         run_key = res.top_output.module_key
     key_value = run_key[len(run_key)::-1]
     key_const = vast.IntConst(str(len(key_value)) + "\'b" + key_value)
-    wportlist += (vast.PortArg('working_key', key_const),)
+    #wportlist += (vast.PortArg('working_key', key_const),)
     '''
     counter = 0
     coutfile = open("scripts/" + str(x) + "/" + wrapper_name + '_const.tcl', 'w')

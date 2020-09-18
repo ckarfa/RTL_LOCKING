@@ -13,7 +13,6 @@
 # -------------------------------------------------------------------------------
 import pyverilog.vparser.ast as vast
 
-
 def encrypt_value(value, start_kb, cfg):
     #print("encrypt")
     ikey = []
@@ -78,7 +77,7 @@ def get_const_size(item):
 def binaryToDecimal(n):
     return int(n,2)
 
-def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant):
+def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant,set):
     print("in const apply")
     print(item)
     #print(key_value)
@@ -157,15 +156,24 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant):
     if cfg.unfold_key == False and ((len(cfg.working_key)+size) > len(cfg.input_key)):
         #print("end")
         return item
-
-    name = "Const_" + str(res.num_consts+total_constant)
+    '''
+    name=input("enter the constant name")
+    name = "Const_" + name #str(res.num_consts+total_constant)
+    '''
     #print(name)
-    sig = vast.Identifier(name)
-    if size > 1:
+    #sig = vast.Identifier(name)
+    #total_size=int(input("enter the size"))
+    if size==32:
+        name=input("enter the constant name")
+        name = "Const_" + name #str(res.num_consts+total_constant)
+        sig = vast.Identifier(name)
         width = vast.Width( vast.IntConst(str(size-1)), vast.IntConst('0') )
         res.top_output.definitions += (vast.Wire(name, width, signed),)
-    else:
-        res.top_output.definitions += (vast.Wire(name),)
+    #else:
+        #name=input("enter the constant name")
+        #name = "Const_" + name
+        #sig = vast.Identifier(name)
+        #res.top_output.definitions += (vast.Wire(name),)
 
     #print(res.top_output.initial_working_key)
     #print(res.top_output.key_bits)
@@ -178,7 +186,9 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant):
     enc=str(result)
     verilog = vast.IntConst(str(size) + "\'d" + enc)
     #print("we are here")
-    if size == 1:
+    '''
+    if size==1:
+        set[0]=set[0]+1
         #print("we are here 2")
         #print(type(1))
         if user_key == 1:
@@ -190,8 +200,11 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant):
         else:
             #print("i m here in else size 1")
             key_part = vast.Pointer(vast.Identifier('working_key'), vast.IntConst(str(current_bit_start)))
-    else:
+    
+    '''
+    if size==32:
         #print("we are here 3")
+        set[0]=set[0]+1
         if user_key == 1:
             #print("i m here2")
             #print("i m here in if size >1")
@@ -210,7 +223,9 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant):
             key_part = vast.Partselect(vast.Identifier('working_key'), vast.IntConst(str(current_bit_start+size-1)), vast.IntConst(str(current_bit_start)))
 
         #key_part = vast.Partselect(vast.Identifier('working_key'), vast.IntConst(str(current_bit_start+size-1)), vast.IntConst(str(current_bit_start)))
-
+    else:
+        return item
+    
     res.top_output.items += (vast.Assign(sig, vast.Xor(verilog, key_part)),)
     res.top_output.key_bits += size
     cfg.working_key += key_value #enc[len(enc)::-1]

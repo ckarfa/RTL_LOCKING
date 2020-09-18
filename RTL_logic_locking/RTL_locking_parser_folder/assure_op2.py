@@ -40,9 +40,10 @@ def resolve(input_string):
 	print(string1)
 	return int(string1)
 
-def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key):
+def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set):
     #print(item)
     #print("analyze_item")
+    
     if isinstance(item, vast.Pragma):
         if item.entry.name == "obfuscation_off":
             cfg.obfuscate_region = False
@@ -59,7 +60,7 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
     elif isinstance(item, vast.IntConst):
         #print("ic")
         #print("analyze int consta")
-        return obfuscation_techniques.obfuscate_const.apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant)
+        return obfuscation_techniques.obfuscate_const.apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant,set)
     elif isinstance(item, vast.FloatConst):
         #print("fc")
         return item
@@ -70,14 +71,14 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
         #print("cc")
         new_list = ()
         for inst in item.list:
-            inst = analyze_item(inst, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            inst = analyze_item(inst, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
             new_list += (inst,)
         item.list = new_list
         return item
     elif isinstance(item, vast.Repeat):
 
         ##print("repeat")
-        item.value = analyze_item(item.value, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.value = analyze_item(item.value, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         return item
     elif isinstance(item, vast.Partselect):
         #print("ps")
@@ -92,27 +93,27 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
         return item
     elif isinstance(item, vast.Rvalue):
         #print("rv")
-        item.var = analyze_item(item.var, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.var = analyze_item(item.var, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
     elif isinstance(item, vast.UnaryOperator):
         #print("uo")
-        item.right = analyze_item(item.right, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.right = analyze_item(item.right, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
     elif isinstance(item, vast.Cond):
         #apply_operation_obf=1
         #print("in condition")
         #print(item.cond)
-        item.cond = analyze_item(item.cond, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.cond = analyze_item(item.cond, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         #print(item.cond)
         #print("true value")
         #print(item.true_value)
         if type(item.true_value) is vast.IntConst:
         	sig_size=resolve(item.true_value.value)
-        item.true_value = analyze_item(item.true_value, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.true_value = analyze_item(item.true_value, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         #print(item.true_value)
         #print("false value")
         #print(item.false_value)
         if type(item.false_value) is vast.IntConst:
         	sig_size=resolve(item.false_value.value)
-        item.false_value = analyze_item(item.false_value, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.false_value = analyze_item(item.false_value, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         #print(item.false_value)
         #print(item.cond)
         item.cond, to_switch = obfuscation_techniques.obfuscate_branch.apply(item.cond, True, cfg, res,list_working_key,user_key)
@@ -126,10 +127,10 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
     elif isinstance(item, vast.Operator):
         #print("operator")
         #print(type(item))
-        item.left = analyze_item(item.left, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.left = analyze_item(item.left, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         #print("left item")
         #print(item.left)
-        item.right = analyze_item(item.right, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.right = analyze_item(item.right, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         #print("item right")
         #print(item.right)
         #print("in operator again")
@@ -198,13 +199,13 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
         #print(left_size)
         #print("item.right.var")
         #print(item.right.var)
-        item.right.var = analyze_item(item.right.var, cfg, res, left_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.right.var = analyze_item(item.right.var, cfg, res, left_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         #print(item.right.var)
 
     elif isinstance(item, vast.Always):
         #print("alays")
         apply_operation_obf=1
-        item.statement = analyze_item(item.statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.statement = analyze_item(item.statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         return item
     elif isinstance(item, vast.BlockingSubstitution) or isinstance(item, vast.NonblockingSubstitution):
         if type(item.left.var) is vast.Partselect:
@@ -213,23 +214,23 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
             return item
         #print("non block part")
         left_size = obfuscation_techniques.obfuscation_analysis.determine_signal_size(res.top_output, item.left)
-        item.left = analyze_item(item.left, cfg, res, left_size, obf_bits,apply_operation_obf,list_working_key,user_key)
-        item.right = analyze_item(item.right, cfg, res, left_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.left = analyze_item(item.left, cfg, res, left_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
+        item.right = analyze_item(item.right, cfg, res, left_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
     elif isinstance(item, vast.IfStatement):
         if not obfuscation_techniques.obfuscation_analysis.is_reset(item.cond):
-            item.cond = analyze_item(item.cond, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            item.cond = analyze_item(item.cond, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         value = True
         to_switch = False
         if not item.false_statement or isinstance(item.false_statement, vast.IfStatement):
             value = False
         if obfuscation_techniques.obfuscation_analysis.is_reset(item.cond):
             cfg.obfuscate_region = False
-            item.true_statement = analyze_item(item.true_statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            item.true_statement = analyze_item(item.true_statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
             cfg.obfuscate_region = True
         else:
-            item.true_statement = analyze_item(item.true_statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            item.true_statement = analyze_item(item.true_statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
             if item.false_statement:
-                item.false_statement = analyze_item(item.false_statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+                item.false_statement = analyze_item(item.false_statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
                 item.cond, to_switch = obfuscation_techniques.obfuscate_branch.apply(item.cond, value, cfg, res,list_working_key,user_key)
             if to_switch and value and item.false_statement:
                 tmp = item.false_statement
@@ -242,19 +243,19 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
         return item
     elif isinstance(item, vast.CaseStatement):
         for case in item.caselist:
-            case = analyze_item(case, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            case = analyze_item(case, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
     elif isinstance(item, vast.Case):
-        item.statement = analyze_item(item.statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+        item.statement = analyze_item(item.statement, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
     elif isinstance(item, vast.Block):
         for st in item.statements:
-            st = analyze_item(st, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            st = analyze_item(st, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         return item
     elif isinstance(item, vast.Initial):
         return item
     elif isinstance(item, vast.InstanceList):
         for inst in item.instances:
             for port in inst.portlist:
-                port.argname = analyze_item(port.argname, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+                port.argname = analyze_item(port.argname, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
         return item
     elif isinstance(item, vast.Function):
         return item
@@ -263,7 +264,7 @@ def analyze_item(item, cfg, res, sig_size, obf_bits,apply_operation_obf,list_wor
     elif isinstance(item, vast.SystemCall):
         #print("system call")
         for inst in item.args:
-            inst = analyze_item(inst, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key)
+            inst = analyze_item(inst, cfg, res, sig_size, obf_bits,apply_operation_obf,list_working_key,user_key,set)
             #print("inst")
             return(inst)
         #return item
@@ -705,7 +706,7 @@ def spurious_operation_else(it,all_reg,list_working_key,user_key,res,cfg,input_l
         total_regs=len(all_reg)-1
         while i<total_statments:
             res.dummy_ops=res.dummy_ops+1
-            multi_chain=1#random.randint(0,1)
+            multi_chain=0#random.randint(0,1)
             if multi_chain==1 and total_mulchain<10:
                 total_mulchain=total_mulchain+1
                 index=random.randint(0,total_regs)
@@ -1074,6 +1075,7 @@ def add_spurious_inside_controller(choose_state,state_no,cp,point,res,cfg):
     total_dummy_tansitions=total_dummy_tansitions+1
     #print(it.statement.statements[0].caselist[i].cond)
     index=res.top_output.initial_working_key + res.top_output.key_bits
+    #index2=res.top_output.initial_working_key + res.top_output.key_bits+2
     #key=cfg.input_key[index]
     const=random.randint(0,1)
     res.top_output.key_bits=res.top_output.key_bits+1
@@ -1094,7 +1096,7 @@ def add_spurious_inside_controller(choose_state,state_no,cp,point,res,cfg):
     dummy_statement=vast.BlockingSubstitution(actual_statement.left.var,dummy_state_right)
     block1=create_block(actual_statement)
     block2=create_block(dummy_statement)
-    wkey=const
+    wkey=0#const
     if wkey:
         item6=vast.IfStatement(item3,block1,block2)
     else:
@@ -1304,7 +1306,8 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     
     count=0
     list_notvalid=[]
-    res.top_output.initial_working_key = starting_key
+
+    res.top_output.initial_working_key =172#starting_key
     obf_bits = obfuscation_data.ObfuscationBits(res.top_output.name)
     
 
@@ -1316,7 +1319,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         if type(it) is vast.Always:
             if type(it.statement.statements[0]) is vast.IfStatement:
                 print("normal always")
-                extract_register_variable(it,all_reg,always_block)
+                #extract_register_variable(it,all_reg,always_block)
     
     print(all_reg)  
     print(always_block)
@@ -1325,11 +1328,11 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         controller_pointer,no_of_states=find_controller(it,input_module)
 
     input_list=[]
-    all_inputs(input_module,input_list)
+    #all_inputs(input_module,input_list)
     input_list_length=len(input_list)
     all_operations=[]
     print("--------------------Find All Operations------------")
-    find_all_operations(input_module,all_operations)
+    #find_all_operations(input_module,all_operations)
     print("\n")
     print("\n")
     print(all_operations)
@@ -1338,9 +1341,10 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     if cfg.dummy_states:
         add_dummy_no=dummy_state_function(input_module,res,all_reg,no_of_states,input_list,input_list_length,all_operations,always_block)
 
-
+    set=[]
+    set.append(0)
+    set_maxi=int(input("enter set mainmum value"))
     print("--------------------Perform Constant, control,operation obf------------")
-    
     for it in input_module.items:
         if type(it) is vast.Decl:
                 continue
@@ -1349,10 +1353,10 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         if it not in list_notvalid:
             apply_operation_obf=0
             if type(it) is vast.Assign:
-                print(it.right.var)
-                if type(it.right.var) is vast.Sll:
                     print("hii")
-                    #analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key)
+                    if set[0]<set_maxi and it.left.var.name[:3]!="Con":
+                        analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key,set)
+                        
                 
             #it = analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key)
             #it=  post_modification(it,res,input_module,it)
@@ -1380,16 +1384,17 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
                 no_of_operations=no_of_operations+1
         
         no_of_operations=no_of_operations
-        no_of_ops=2#int((no_of_operations*35)/100)
+        no_of_ops=18#int((no_of_operations*15)/100)
         add_spurious_operations(input_module,it,all_reg,list_working_key,user_key,res,cfg,input_list,input_list_length,all_operations,no_of_ops)
 
     print("--------------------Add spurious transitions-----------------")
     if cfg.spurious_trans:
         add_spurious_transition(controller_pointer,list_working_key,user_key,res,cfg,dummy_states_list,dummy_states_trans_dict)
 
+   
     
     print("-------------------Write Parameter----------------------------")
-    write_parameters(res,input_module)
+    #write_parameters(res,input_module)
 
     res.modules[res.top_output.name] = obf_bits
 
@@ -1481,7 +1486,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     if user_key == 1:
         v_filename = "hdl2/" + res.top_output.name+"_key_1" + ".v"
     else:
-        v_filename = "hdl2/" + res.top_output.name+"_key_0" + ".v"
+        v_filename = res.top_output.name+"_key_0" + ".v"
     output_generation.generate_ast(ast, v_filename)
     res.list_files.append([res.top_output.name, v_filename])
 
@@ -1493,11 +1498,11 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     print("")
     print("working key")
     #print(cfg.working_key)
-    c_name= "hdl2/"+res.top_output.name+"working_key"+".txt"
-    f= open(c_name,"w+")
-    for val in cfg.working_key:
-    	f.write(val)
-    	f.write("\n")
+    #c_name= "hdl2/"+res.top_output.name+"working_key"+".txt"
+    #f= open(c_name,"w+")
+    #for val in cfg.working_key:
+    	#f.write(val)
+    	#f.write("\n")
     #print(cfg.working_key[0])
     #print(cfg.working_key[1])
     #print(cfg.working_key[2])
@@ -1556,7 +1561,7 @@ def main():
 
     ### execution setup
     
-    total_files=3#int(input("Enter the number of files:"))
+    total_files=1#int(input("Enter the number of files:"))
     if total_files<=0:
         raise Exception("atleast single required:")
     i=0
@@ -1564,8 +1569,8 @@ def main():
     all_files=[]
     show_output=[]
     while i<total_files:
-        file_name=input("Enter the name of file:")
-        top_name=input("Enter the name of top module:")
+        file_name="check_key_0.v"#input("Enter the name of file:")
+        top_name="check"#input("Enter the name of top module:")
         all_files.append(file_name)
         (options, args) = optparser.parse_args()
         #print(args)
