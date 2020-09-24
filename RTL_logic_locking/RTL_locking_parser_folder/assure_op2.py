@@ -1307,7 +1307,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
     count=0
     list_notvalid=[]
 
-    res.top_output.initial_working_key =172#starting_key
+    res.top_output.initial_working_key =starting_key
     obf_bits = obfuscation_data.ObfuscationBits(res.top_output.name)
     
 
@@ -1319,7 +1319,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         if type(it) is vast.Always:
             if type(it.statement.statements[0]) is vast.IfStatement:
                 print("normal always")
-                #extract_register_variable(it,all_reg,always_block)
+                extract_register_variable(it,all_reg,always_block)
     
     print(all_reg)  
     print(always_block)
@@ -1328,11 +1328,11 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         controller_pointer,no_of_states=find_controller(it,input_module)
 
     input_list=[]
-    #all_inputs(input_module,input_list)
+    all_inputs(input_module,input_list)
     input_list_length=len(input_list)
     all_operations=[]
     print("--------------------Find All Operations------------")
-    #find_all_operations(input_module,all_operations)
+    find_all_operations(input_module,all_operations)
     print("\n")
     print("\n")
     print(all_operations)
@@ -1351,14 +1351,8 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
         #if type(it) is vast.Assign:
                 #it = analyze_item1(it,res,list_notvalid)
         if it not in list_notvalid:
-            apply_operation_obf=0
-            if type(it) is vast.Assign:
-                    print("hii")
-                    if set[0]<set_maxi and it.left.var.name[:3]!="Con":
-                        analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key,set)
-                        
-                
-            #it = analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key)
+            apply_operation_obf=0           
+            it = analyze_item(it, cfg, res, -1, obf_bits,apply_operation_obf,list_working_key,user_key)
             #it=  post_modification(it,res,input_module,it)
             #it = part_select_module(it,res,input_module,it)
             #it = concate_module(it,res,input_module,it)
@@ -1394,7 +1388,7 @@ def perform_module_obfuscation(original_module, cfg,list_working_key,user_key,sh
    
     
     print("-------------------Write Parameter----------------------------")
-    #write_parameters(res,input_module)
+    write_parameters(res,input_module)
 
     res.modules[res.top_output.name] = obf_bits
 
@@ -1561,7 +1555,7 @@ def main():
 
     ### execution setup
     
-    total_files=1#int(input("Enter the number of files:"))
+    total_files=int(input("Enter the number of files:"))
     if total_files<=0:
         raise Exception("atleast single required:")
     i=0
@@ -1569,8 +1563,8 @@ def main():
     all_files=[]
     show_output=[]
     while i<total_files:
-        file_name="check_key_0.v"#input("Enter the name of file:")
-        top_name="check"#input("Enter the name of top module:")
+        file_name=input("Enter the name of file:")
+        top_name=input("Enter the name of top module:")
         all_files.append(file_name)
         (options, args) = optparser.parse_args()
         #print(args)
@@ -1583,7 +1577,7 @@ def main():
     
     for keys in main_dic.keys():
         print(keys)
-    key_available="No"#input("Working key available Yes/No:")
+    key_available=input("Working key available Yes/No:")
     #(options, args) = optparser.parse_args()
     #print(args)
     #print(options)

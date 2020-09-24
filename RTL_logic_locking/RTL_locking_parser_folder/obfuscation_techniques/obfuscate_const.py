@@ -161,19 +161,20 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant,set)
     name = "Const_" + name #str(res.num_consts+total_constant)
     '''
     #print(name)
-    #sig = vast.Identifier(name)
+    name = "Const_" + str(res.num_consts)
+    sig = vast.Identifier(name)
     #total_size=int(input("enter the size"))
-    if size==32:
-        name=input("enter the constant name")
-        name = "Const_" + name #str(res.num_consts+total_constant)
-        sig = vast.Identifier(name)
+    if size>1:
+        #name=input("enter the constant name")
+        #name = "Const_" + name #str(res.num_consts+total_constant)
+        #sig = vast.Identifier(name)
         width = vast.Width( vast.IntConst(str(size-1)), vast.IntConst('0') )
         res.top_output.definitions += (vast.Wire(name, width, signed),)
-    #else:
+    else:
         #name=input("enter the constant name")
         #name = "Const_" + name
         #sig = vast.Identifier(name)
-        #res.top_output.definitions += (vast.Wire(name),)
+        res.top_output.definitions += (vast.Wire(name),)
 
     #print(res.top_output.initial_working_key)
     #print(res.top_output.key_bits)
@@ -186,7 +187,7 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant,set)
     enc=str(result)
     verilog = vast.IntConst(str(size) + "\'d" + enc)
     #print("we are here")
-    '''
+
     if size==1:
         set[0]=set[0]+1
         #print("we are here 2")
@@ -201,8 +202,8 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant,set)
             #print("i m here in else size 1")
             key_part = vast.Pointer(vast.Identifier('working_key'), vast.IntConst(str(current_bit_start)))
     
-    '''
-    if size==32:
+
+    else:
         #print("we are here 3")
         set[0]=set[0]+1
         if user_key == 1:
@@ -219,12 +220,11 @@ def apply(item, cfg, res, sig_size,list_working_key,user_key,total_constant,set)
             enc=str(result)
             key_part = vast.IntConst(str(size) + "\'d" + enc)
         else:
-            #print("i m here in else size >1")
+            print("i m here in else size >1")
             key_part = vast.Partselect(vast.Identifier('working_key'), vast.IntConst(str(current_bit_start+size-1)), vast.IntConst(str(current_bit_start)))
 
         #key_part = vast.Partselect(vast.Identifier('working_key'), vast.IntConst(str(current_bit_start+size-1)), vast.IntConst(str(current_bit_start)))
-    else:
-        return item
+   
     
     res.top_output.items += (vast.Assign(sig, vast.Xor(verilog, key_part)),)
     res.top_output.key_bits += size

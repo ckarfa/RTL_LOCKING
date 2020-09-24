@@ -1,6 +1,6 @@
 # ASSURE++
 
-Welcome to ASSURE!
+Welcome to ASSURE++!
 
 This is a tool for logic locking at register-transfer level. With ASSURE++, designers can apply logic locking to existing
 RTL designs, including manually-designed intellectual property (IP) cores or HLS-generated components. Currently, 
@@ -10,21 +10,21 @@ For any questions/concerns,.
 
 ## Requirements ##
 
-### ASSURE dependencies ####
+### ASSURE++ dependencies ####
 
-To execute ASSURE, you will need to satisfy the following dependencies:
+To execute ASSURE++, you will need to satisfy the following dependencies:
 1. Python (ver. 3.6 or greater)
 2. Icarus Verilog
 
 ## Installation ##
 
-ASSURE does not require any installation and can be directly used.
+ASSURE++ does not require any installation and can be directly used.
 
-## Running ASSURE ##
+## Running ASSURE++ ##
 
 ### Basic execution ###
 
-ASSURE is a command-line tool and requires the following elements to obfuscate a given design:
+ASSURE++ is a command-line tool and requires the following elements to obfuscate a given design:
 - The Verilog files of the design (together with compilation flags)
 - The name of the top module (`--top` option) 
 - The locking key for obfuscation (`--locking-key` option)
@@ -54,7 +54,7 @@ The design is saved into a file `alu.v`. The designer must create a text file to
 01010111
 ```
 
-Let us assume this file is named `locking_key.txt`. ASSURE can selectively apply the different obfuscation techniques:
+Let us assume this file is named `locking_key.txt`. ASSURE++ can selectively apply the different obfuscation techniques:
 - `--obfuscate-const <min_size>`: applies constant obfuscation, where `min-size` represents the minimum bit-width of
 the constants to obfuscate. For example, with `--obfuscate-const 8`, all constants equals or larger than 8 bits are 
 obfuscated. With  `--obfuscate-const 0`, all constants are obfuscated. Requires as many key bits as the total bit-widths
@@ -71,7 +71,7 @@ For example, it is possible to apply constant and control-flow obfuscation to th
    $ python3 assure.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate-const 0 --obfuscate-branch
 ```
 
-ASSURE also feature a single option (`--obfuscate`) to apply all obfuscation techniques mentioned above. It is 
+ASSURE++ also feature a single option (`--obfuscate`) to apply all obfuscation techniques mentioned above. It is 
 equivalent to the following string:
 ```
 --obfuscate-const 0 --obfuscate-ops --obfuscate-branch
@@ -79,7 +79,7 @@ equivalent to the following string:
   
 ### Analysis of display output and output files  ###
 
-ASSURE produces a report that contains the following information:
+ASSURE++ produces a report that contains the following information:
 - Number of input key bits
 - List of obfuscated modules (uniquify is performed), where the number of obfuscated constants, operations and branches
 are reported, together with the number of used key bits for each of them.
@@ -115,14 +115,14 @@ module, it represents the total number of key bits used for the entire design.
 - `0.CORRECT KEY =` lists the file where the current module is wrapped to have the same interface as the original one
 and the correct key is given for validation.
 
-Indeed, ASSURE produces three folders:
+Indeed, ASSURE++ produces three folders:
 - `hdl` contains the list of files with the obfuscated modules.
 - `scripts` contains the script for formal verification with Synopsys Formality
 - `wrappers` contains the wrappers around the obfuscated modules
 
 ### Formal Verification and RTL simulation ###
 
-Formal verification of the obfuscated design mentioned above can be run in the directory where ASSURE has been executed
+Formal verification of the obfuscated design mentioned above can be run in the directory where ASSURE++ has been executed
 as follows:
 ```
 $ fm_shell -f scripts/0/alu_top_0_obf_golden_verify.tcl
@@ -134,9 +134,9 @@ different from the one used for obfuscation) is inserted.
 The same wrapper file, together with the ones describing the obfuscated modules, can replace the original module in the 
 testbench for RTL validation.  
 
-## Advanced use of ASSURE ## 
+## Advanced use of ASSURE++ ## 
 
-ASSURE also feature a single option (`--obfuscate`) to apply all obfuscation techniques mentioned above. It is 
+ASSURE++ also feature a single option (`--obfuscate`) to apply all obfuscation techniques mentioned above. It is 
 equivalent to the following string:
 ```
 --obfuscate-const 0 --obfuscate-ops --obfuscate-branch
@@ -149,8 +149,8 @@ reached. For example, when executing the following command:
    $ python3 assure.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate
 ```
 
-ASSURE uses only 4 bits even if the entire design requires 12 bits for obfuscation. Indeed, after obfuscating the three
-operations and the ternary operator, there are no enough bits to obfuscate also the 8-bit constant. So, ASSURE offers 
+ASSURE++ uses only 4 bits even if the entire design requires 12 bits for obfuscation. Indeed, after obfuscating the three
+operations and the ternary operator, there are no enough bits to obfuscate also the 8-bit constant. So, ASSURE++ offers 
 two alternatives:
 - full obfuscation
 - selective obfuscation

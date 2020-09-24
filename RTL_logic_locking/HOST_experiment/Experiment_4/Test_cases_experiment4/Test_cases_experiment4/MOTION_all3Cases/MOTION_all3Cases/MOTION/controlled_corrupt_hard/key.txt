@@ -1,0 +1,11 @@
+hkey1 0
+hkey2 1
+hkey3 0
+hkey4 1
+hkey5 0
+hkey6 1
+hkey7 0
+hkey8 0
+hkey9 0
+hkey10 1
+
