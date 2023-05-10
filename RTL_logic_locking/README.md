@@ -68,7 +68,7 @@ bit per control construct.
 For example, it is possible to apply constant and control-flow obfuscation to the `alu_top` module as follows:
 
 ```
-   $ python3 assure.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate-const 0 --obfuscate-branch
+   $ python3 assure_op2.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate-const 0 --obfuscate-branch
 ```
 
 ASSURE++ also feature a single option (`--obfuscate`) to apply all obfuscation techniques mentioned above. It is 
@@ -146,7 +146,7 @@ However, the analysis is performed in deep-first search and obfuscation stops wh
 reached. For example, when executing the following command:
 
 ```
-   $ python3 assure.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate
+   $ python3 assure_op2.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate
 ```
 
 ASSURE++ uses only 4 bits even if the entire design requires 12 bits for obfuscation. Indeed, after obfuscating the three
@@ -161,7 +161,7 @@ It is possible to apply obfuscation beyond the key limit by specifying the optio
 example, the previous design can obfuscate all elements as follows:
 
 ```
-   $ python3 assure.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate --obfuscate-entire-design
+   $ python3 assure_op2.py alu.v --top alu_top.v --locking-key locking_key.txt --obfuscate --obfuscate-entire-design
 ```
 The resulting design uses 12 bits that are obtained by replicating the input locking key as many times as needed.
 
